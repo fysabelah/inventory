@@ -1,0 +1,7 @@
+package com.spring.batch.api.products.utils.enums;
+
+public enum Genre {
+
+    POETRY, NOVEL, FANTASY, FICTION, NON_FICTION, SCIENCE_FICTION, MYSTERY, THRILLER, HORROR, BIOGRAPY, AUTOBIOGRAPHY,
+    HISTORICAL_FICTION
+}

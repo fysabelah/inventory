@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductController {
+public class ProductController<T extends ProductDto> {
 
     @Autowired
     private ProductGateway gateway;
 
-    public ProductDto insert(ProductDto productDto) {
-
+    public T insert(T productDto) {
         return null;
     }
 }

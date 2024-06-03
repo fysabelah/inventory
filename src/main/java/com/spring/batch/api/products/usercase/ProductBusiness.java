@@ -20,15 +20,13 @@ public class ProductBusiness {
             return createShoesSku(product.getShoe());
         }
 
-        return createEletronicSku(product.getEletronic());
+        return createElectronicSku(product.getElectronic());
     }
 
-    private String createEletronicSku(Eletronic eletronic) {
-        return normalize(eletronic.getModel())
+    private String createElectronicSku(Electronic electronic) {
+        return normalize(electronic.getModel())
                 .concat("-")
-                .concat(normalize(eletronic.getBrand()))
-                .concat("-")
-                .concat(normalize(eletronic.getBrand()));
+                .concat(normalize(electronic.getBrand()));
     }
 
     private String normalize(String value) {

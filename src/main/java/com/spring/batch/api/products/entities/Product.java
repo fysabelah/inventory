@@ -42,5 +42,5 @@ public class Product {
 
     private Shoe shoe;
 
-    private Eletronic eletronic;
+    private Electronic electronic;
 }

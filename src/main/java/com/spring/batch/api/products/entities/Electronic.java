@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Eletronic {
+public class Electronic {
 
     private String model;
 

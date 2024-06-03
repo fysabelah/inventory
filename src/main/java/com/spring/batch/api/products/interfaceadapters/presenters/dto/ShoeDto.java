@@ -15,22 +15,22 @@ import lombok.Setter;
 @Setter
 public class ShoeDto extends ProductDto {
 
-    @NotBlank
+    @NotBlank(message = "BRAND_CANT_BE_EMPTY")
     @Schema(description = "Marca do sapato", example = "NIKE")
-    @Size(max = 50)
+    @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
     private String brand;
 
     @Pattern(regexp = "[0-9]{2}")
     @Schema(description = "Tamanho", example = "38")
     private String size;
 
-    @NotBlank
+    @NotBlank(message = "NAME_CANT_BE_EMPTY")
     @Schema(example = "Sapato corredor", description = "Nome")
-    @Size(max = 50)
+    @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "COLOR_CANT_BE_EMPTY")
     @Schema(description = "Cor", example = "Amarelo")
-    @Size(max = 50)
+    @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
     private String color;
 }

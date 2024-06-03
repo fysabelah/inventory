@@ -16,27 +16,28 @@ import lombok.Setter;
 @Setter
 public class EletronicDto extends ProductDto {
 
-    @NotBlank
+    @NotBlank(message = "MODEL_CANT_BE_EMPTY")
     @Schema(example = "Modelo", description = "3310")
-    @Size(max = 50)
+    @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
     private String model;
 
-    @NotBlank
+    @NotBlank(message = "BRAND_CANT_BE_EMPTY")
     @Schema(description = "Marca", example = "Nokia")
-    @Size(max = 50)
+    @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
     private String brand;
 
-    @NotBlank
+    @NotBlank(message = "COLOR_CANT_BE_EMPTY")
     @Schema(description = "Cor", example = "Amarelo")
-    @Size(max = 50)
+    @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
     private String color;
 
-    @NotBlank
+    @NotBlank(message = "NAME_CANT_BE_EMPTY")
     @Schema(example = "Nokia quadrado", description = "Nome")
-    @Size(max = 100)
+    @Size(max = 100, message = "MAXIMUM_SIZE_EXCEEDED")
     private String name;
 
     @Schema(example = "Excelente jogo da cobrinha", description = "Características")
+    @Size(max = 250, message = "MAXIMUM_SIZE_EXCEEDED")
     private String features;
 
     @NotNull

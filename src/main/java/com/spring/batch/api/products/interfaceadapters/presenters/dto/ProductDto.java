@@ -18,41 +18,47 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"sku"}, allowGetters = true)
+@JsonIgnoreProperties(value = {"sku", "category"}, allowGetters = true)
 public class ProductDto {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String sku;
 
     @Schema(description = "Informações sobre o produto", example = "Calça jeans azul de cintura baixo com rasgo no joelho")
-    @Size(max = 150)
+    @Size(max = 150, message = "MAXIMUM_SIZE_EXCEEDED")
     private String description;
 
-    @Schema(description = "Categoria do produto")
-    @NotNull
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private ProductCategory category;
 
     @Schema(description = "Quantidade de produtos", example = "15")
-    @Min(value = 0)
+    @Min(value = 0, message = "AVAILABLE_QUANTITY_DO_NOT_SHOULD_BE_NEGATIVE")
+    @NotNull(message = "AVAILABLE_QUANTITY_DO_NOT_SHOULD_BE_NEGATIVE")
     private Integer quantity;
 
     @Schema(example = "2", description = "Quantidade de produtos que não devem ser reservados na tentativa de diminuir quebra de estoque")
-    @Min(value = 0)
+    @Min(value = 0, message = "PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE")
+    @NotNull(message = "PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE")
     private Integer protection;
 
     @Schema(example = "115.99", description = "Valor unitário do produto")
     @Min(value = 0)
+    @NotNull
     private BigDecimal value;
 
     @Schema(example = "2", description = "Largura do produto em cm")
     @PositiveOrZero
+    @NotNull
     private BigDecimal width;
 
     @Schema(example = "1.70", description = "Comprimento do produto em cm")
     @PositiveOrZero
+    @NotNull
     private BigDecimal length;
 
     @Schema(example = "30", description = "Altura do produto")
     @PositiveOrZero
+    @NotNull
     private BigDecimal height;
 
     @Schema(example = "true", description = "Status do produto")

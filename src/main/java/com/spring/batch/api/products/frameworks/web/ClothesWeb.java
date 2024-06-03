@@ -2,6 +2,7 @@ package com.spring.batch.api.products.frameworks.web;
 
 import com.spring.batch.api.products.interfaceadapters.controllers.ProductController;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ClothesDto;
+import com.spring.batch.api.products.utils.exceptions.BusinessException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ClothesWeb {
     }
 
     @PostMapping(produces = "application/json", consumes = "application/json")
-    public ResponseEntity<ClothesDto> insert(@Valid @RequestBody ClothesDto clothes) {
+    public ResponseEntity<ClothesDto> insert(@Valid @RequestBody ClothesDto clothes) throws BusinessException {
         return ResponseEntity.ok(controller.insert(clothes));
     }
 }

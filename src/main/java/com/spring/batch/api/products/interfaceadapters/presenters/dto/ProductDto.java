@@ -1,6 +1,7 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.utils.enums.ProductCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
@@ -18,8 +19,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"sku", "category"}, allowGetters = true)
+@JsonIgnoreProperties(value = {"sku", "category", "id"}, allowGetters = true)
 public class ProductDto {
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private String id;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String sku;
@@ -63,4 +67,18 @@ public class ProductDto {
 
     @Schema(example = "true", description = "Status do produto")
     private boolean active;
+
+    public ProductDto(Product product) {
+        this.id = product.getId();
+        this.sku = product.getSku();
+        this.description = product.getDescription();
+        this.category = product.getCategory();
+        this.quantity = product.getAvailability().getQuantity();
+        this.protection = product.getAvailability().getProtection();
+        this.value = product.getValue();
+        this.width = product.getDimensions().getWidth();
+        this.length = product.getDimensions().getLength();
+        this.height = product.getDimensions().getHeight();
+        this.active = product.isActive();
+    }
 }

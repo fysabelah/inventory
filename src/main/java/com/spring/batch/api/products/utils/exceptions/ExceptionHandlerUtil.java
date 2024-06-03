@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class ExceptionHandlerUtil {
 
@@ -50,4 +52,17 @@ public class ExceptionHandlerUtil {
         return ResponseEntity.status(status).body(error);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class, BusinessException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<StandardError> badRequest(Exception exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        StandardError error = new StandardError(status.value(),
+                "Parameters error",
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(error);
+    }
 }

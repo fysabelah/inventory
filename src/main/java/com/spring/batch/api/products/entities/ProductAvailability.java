@@ -18,4 +18,9 @@ public class ProductAvailability {
     private Integer protection;
 
     private LocalDateTime updatedAt;
+
+    public ProductAvailability(Integer quantity, Integer protection) {
+        this.quantity = quantity;
+        this.protection = protection;
+    }
 }

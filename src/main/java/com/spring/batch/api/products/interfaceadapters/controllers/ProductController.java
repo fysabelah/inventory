@@ -1,58 +1,123 @@
 package com.spring.batch.api.products.interfaceadapters.controllers;
 
-import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.interfaceadapters.gateways.ProductGateway;
-import com.spring.batch.api.products.interfaceadapters.presenters.converters.Presenter;
+import com.spring.batch.api.products.interfaceadapters.presenters.converters.ProductPresenter;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
-import com.spring.batch.api.products.usercase.ProductBusiness;
+import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.Genre;
-import com.spring.batch.api.products.utils.exceptions.BusinessException;
+import com.spring.batch.api.products.utils.enums.ProductCategory;
+import com.spring.batch.api.products.utils.enums.ProductSize;
+import com.spring.batch.api.products.utils.pagination.PagedResponse;
+import com.spring.batch.api.products.utils.pagination.Pagination;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Component
-public class ProductController<T extends ProductDto> {
+public class ProductController {
 
-    private final ProductGateway gateway;
+    private ProductPresenter presenter;
 
-    private final Presenter<Product, T> presenter;
+    private ProductGateway gateway;
 
-    private final ProductBusiness business;
-
-    public ProductController(ProductGateway gateway, Presenter<Product, T> presenter, ProductBusiness business) {
-        this.gateway = gateway;
+    @Autowired
+    public ProductController(ProductPresenter presenter, ProductGateway gateway) {
         this.presenter = presenter;
+        this.gateway = gateway;
+    }
+
+    public ProductDto insert(ProductDto body) {
+        return null;
+    }
+
+    public ProductDto findBySku(String sku, ProductCategory category) {
+        return null;
+    }
+
+    public void updateStatus(String id, boolean status) {
+
+    }
+
+    public void changeQuantity(ProductCategory category, String sku, Integer quantity, LocalDateTime updatedAt, Integer protection) {
+
+    }
+
+    public ProductDto update(String id, ProductDto product) {
+        return null;
+    }
+
+    public void delete(String id) {
+
+    }
+
+    public PagedResponse findAllBooks(String title, Genre genre, boolean status, Pagination page) {
+        return null;
+    }
+
+    public PagedResponse findAllElectronics(String name, String brand, String model, ElectronicType electronicType, boolean status, Pagination page) {
+        return null;
+    }
+
+    public PagedResponse findAllClothes(String name, String brand, String model, ProductSize size, boolean status, Pagination page) {
+        return null;
+    }
+
+    public PagedResponse findAllShoes(String name, String brand, String size, boolean status, Pagination page) {
+        return null;
+    }
+    /*protected BookPresenter presenter;
+
+    protected GenericProductGateway gateway;
+
+    protected ProductBusiness business;
+
+    public ProductController(BookPresenter presenter, GenericProductGateway gateway, ProductBusiness business) {
+        this.presenter = presenter;
+        this.gateway = gateway;
         this.business = business;
     }
 
-    public T insert(T productDto) throws BusinessException {
-        Product product = presenter.convert(productDto);
-
-        String sku = business.createSku(product);
-
-        Optional<Product> optionalProduct = gateway.findBySkuOptional(sku);
-
-        if (optionalProduct.isPresent()) {
-            throw new BusinessException("PRODUCT_ALREADY_REGISTERED");
-        }
-
-        business.updateToInsert(sku, product);
-
-        product = gateway.insert(product);
-
-        return presenter.convert(product);
+    public void updateStatus(String id, boolean status) {
+        gateway.changeStatus(id, status);
     }
 
-    public void update(String sku, String publisher, String title, Integer pages, Genre genre) throws BusinessException {
+    public void changeQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection) throws BusinessException {
         Product product = gateway.findBySku(sku);
 
-        business.verifyAndUpdateBook(title, pages, genre, product, publisher);
+        business.updateQuantity(quantity, protection, updatedAt, product);
 
         gateway.update(product);
+    }
+
+    public T update(String id, T productDto) throws BusinessException {
+        Product product = gateway.findById(id);
+        Product newInformation = presenter.convert(productDto);
+
+        if (productDto.getClass().isInstance(ProductDto.class)) {
+            business.updateProductInformation(product, productDto);
+        } else {
+            business.updateSpecificInformation(product, newInformation);
+        }
+
+        product = gateway.update(product);
+
+        return presenter.convert(product);
     }
 
     public T findBySku(String sku) {
         return presenter.convert(gateway.findBySku(sku));
     }
+
+    public void delete(String id) {
+        Product product = gateway.findById(id);
+
+        gateway.delete(product);
+    }*/
+
+    /* public T insert(T body) {
+     *//* Product product = presenter.convert(body);*//*
+
+        return null;
+    }*/
 }

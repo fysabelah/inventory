@@ -1,104 +1,78 @@
 package com.spring.batch.api.products.usercase;
 
-import com.spring.batch.api.products.entities.*;
-import com.spring.batch.api.products.utils.enums.Genre;
-import com.spring.batch.api.products.utils.enums.ProductCategory;
+import com.spring.batch.api.products.entities.Product;
+import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
-import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-@Component
-public class ProductBusiness {
+public abstract class ProductBusiness {
 
-    private final Clock clock;
+    protected final Clock clock;
 
-    public ProductBusiness(Clock clock) {
+    protected ProductBusiness(Clock clock) {
         this.clock = clock;
     }
 
-    public void updateToInsert(String sku, Product product) {
-        product.setSku(sku);
-        product.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
-    }
+    public String getSku(List<String> fields) {
+        List<String> normalized = new ArrayList<>();
 
-    public String createSku(Product product) {
-        if (ProductCategory.BOOKS.equals(product.getCategory())) {
-            return createBookSku(product.getBook());
+        for (String field : fields) {
+            normalized.add(normalize(field));
         }
 
-        if (ProductCategory.CLOTHES.equals(product.getCategory())) {
-            return createClothesSku(product.getClothes());
-        }
-
-        if (ProductCategory.SHOES.equals(product.getCategory())) {
-            return createShoesSku(product.getShoe());
-        }
-
-        return createElectronicSku(product.getElectronic());
-    }
-
-    private String createElectronicSku(Electronic electronic) {
-        return normalize(electronic.getModel())
-                .concat("-")
-                .concat(normalize(electronic.getBrand()));
+        return String.join("-", normalized);
     }
 
     private String normalize(String value) {
         return value.replaceAll("\\s", "-");
     }
 
-    private String createShoesSku(Shoe shoe) {
-        return normalize(shoe.getName())
-                .concat("-")
-                .concat(normalize(shoe.getBrand()))
-                .concat("-")
-                .concat(normalize(shoe.getColor()))
-                .concat("-")
-                .concat(normalize(shoe.getSize()));
-    }
+    /* private String createShoesSku(Shoe shoe) {
+         return normalize(shoe.getName())
+                 .concat("-")
+                 .concat(normalize(shoe.getBrand()))
+                 .concat("-")
+                 .concat(normalize(shoe.getColor()))
+                 .concat("-")
+                 .concat(normalize(shoe.getSize()));
+     }
 
-    private String createClothesSku(Clothes clothes) {
-        return normalize(clothes.getName())
-                .concat("-")
-                .concat(normalize(clothes.getModel()))
-                .concat("-")
-                .concat(normalize(clothes.getBrand()))
-                .concat("-")
-                .concat(normalize(clothes.getSize().name()));
-    }
+     private String createClothesSku(Clothes clothes) {
+         return normalize(clothes.getName())
+                 .concat("-")
+                 .concat(normalize(clothes.getModel()))
+                 .concat("-")
+                 .concat(normalize(clothes.getBrand()))
+                 .concat("-")
+                 .concat(normalize(clothes.getSize().name()));
+     }
+ */
 
-    private String createBookSku(Book book) {
-        return normalize(book.getIsbn());
-    }
-
-    public void verifyAndUpdateBook(String title, Integer pages, Genre genre, Product product, String publisher) throws BusinessException {
-        boolean hasToUpdate = false;
-
-        if (title != null && !title.isBlank() && title.compareTo(product.getBook().getTitle()) != 0) {
-            product.getBook().setTitle(title);
-            hasToUpdate = true;
+    protected void checkIfShouldUpdateQuantity(LocalDateTime lastUpdated, LocalDateTime updatedAt, Integer newQuantity, Integer protection) throws BusinessException {
+        if (lastUpdated.isAfter(updatedAt)) {
+            throw new BusinessException("PRODUCT_HAS_LATEST_UPDATE");
         }
 
-        if (pages >= 0 && !Objects.equals(product.getBook().getPages(), pages)) {
-            hasToUpdate = true;
-            product.getBook().setPages(pages);
+        if (newQuantity < 0) {
+            throw new BusinessException("AVAILABLE_QUANTITY_DO_NOT_SHOULD_BE_NEGATIVE");
         }
 
-        if (genre != null && !product.getBook().getGenre().equals(genre)) {
-            hasToUpdate = true;
-            product.getBook().setGenre(genre);
-        }
-
-        if (publisher != null && !publisher.isBlank() && !product.getBook().getPublisher().equals(publisher)) {
-            hasToUpdate = true;
-            product.getBook().setPublisher(publisher);
-        }
-
-        if (!hasToUpdate) {
-            throw new BusinessException("NOTHING_TO_UPDATE");
+        if (protection < 0) {
+            throw new BusinessException("PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE");
         }
     }
+
+    public void updateProductInformation(Product product, ProductDto productDto) {
+        product.setActive(productDto.isActive());
+        product.setDescription(productDto.getDescription());
+        product.setValue(productDto.getValue());
+    }
+
+    public abstract void updateQuantity(Integer quantity, Integer protection, LocalDateTime updatedAt, Product product) throws BusinessException;
+
+    public abstract void updateSpecificInformation(Product toUpdate, Product newInformation) throws BusinessException;
 }

@@ -1,21 +1,22 @@
 package com.spring.batch.api.products.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.spring.batch.api.products.entities.availability.ProductAvailabilityShoe;
+import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Shoe {
 
     private String brand;
 
-    private String size;
-
     private String name;
 
     private String color;
+
+    private List<ProductAvailabilityShoe> availability;
 }

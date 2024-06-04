@@ -1,24 +1,24 @@
 package com.spring.batch.api.products.entities;
 
-import com.spring.batch.api.products.utils.enums.ProductSize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.spring.batch.api.products.entities.availability.ProductAvailabilityClothes;
+import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Clothes {
 
     private String model;
 
     private String brand;
 
-    private ProductSize size;
-
     private String color;
 
     private String name;
+
+    private List<ProductAvailabilityClothes> availability;
 }

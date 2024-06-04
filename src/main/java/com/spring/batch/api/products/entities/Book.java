@@ -1,5 +1,6 @@
 package com.spring.batch.api.products.entities;
 
+import com.spring.batch.api.products.entities.availability.ProductAvailability;
 import com.spring.batch.api.products.utils.enums.Genre;
 import lombok.*;
 
@@ -19,4 +20,6 @@ public class Book {
     private Genre genre;
 
     private String publisher;
+
+    private ProductAvailability availability;
 }

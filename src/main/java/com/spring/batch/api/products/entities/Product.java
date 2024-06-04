@@ -17,17 +17,11 @@ public class Product {
     @Id
     private String id;
 
-    private String sku;
-
     private String description;
 
     private ProductCategory category;
 
-    private ProductAvailability availability;
-
     private BigDecimal value;
-
-    private Dimensions dimensions;
 
     private boolean active;
 
@@ -40,14 +34,38 @@ public class Product {
     private Electronic electronic;
 
     @Builder(builderMethodName = "book")
-    public Product(String sku, String description, ProductAvailability availability, BigDecimal value, Dimensions dimensions, boolean active, Book book) {
-        this.sku = sku;
+    public Product(String description, BigDecimal value, boolean active, Book book) {
         this.description = description;
         this.category = ProductCategory.BOOKS;
-        this.availability = availability;
         this.value = value;
-        this.dimensions = dimensions;
         this.active = active;
         this.book = book;
+    }
+
+    @Builder(builderMethodName = "shoe")
+    public Product(String description, BigDecimal value, boolean active, Shoe shoe) {
+        this.description = description;
+        this.category = ProductCategory.SHOES;
+        this.value = value;
+        this.active = active;
+        this.shoe = shoe;
+    }
+
+    @Builder(builderMethodName = "clothes")
+    public Product(String description, BigDecimal value, boolean active, Clothes clothes) {
+        this.description = description;
+        this.category = ProductCategory.CLOTHES;
+        this.value = value;
+        this.active = active;
+        this.clothes = clothes;
+    }
+
+    @Builder(builderMethodName = "electronic")
+    public Product(String description, BigDecimal value, boolean active, Electronic electronic) {
+        this.description = description;
+        this.category = ProductCategory.ELECTRONICS;
+        this.value = value;
+        this.active = active;
+        this.electronic = electronic;
     }
 }

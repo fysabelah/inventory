@@ -1,8 +1,7 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.batch.api.products.entities.Product;
+import com.spring.batch.api.products.entities.Book;
 import com.spring.batch.api.products.utils.enums.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +15,7 @@ import lombok.*;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BookDto extends ProductDto {
+public class BookDto extends CategoryInformation {
 
     @Schema(description = "Número de livro internacional padronizado", example = "978-0-596-52068-7")
     @NotBlank
@@ -40,13 +39,16 @@ public class BookDto extends ProductDto {
     @NotBlank(message = "BOOK_WITHOUT_PUBLISHER")
     private String publisher;
 
+    @NotNull
+    private AvailabilityDto availability;
+
     @Builder
-    public BookDto(String title, Integer pages, Genre genre, String publisher, String isbn, Product product) {
-        super(product);
-        this.title = title;
-        this.isbn = isbn;
-        this.pages = pages;
-        this.genre = genre;
-        this.publisher = publisher;
+    public BookDto(Book book) {
+        this.isbn = book.getIsbn();
+        this.title = book.getTitle();
+        this.pages = book.getPages();
+        this.genre = book.getGenre();
+        this.publisher = book.getPublisher();
+        this.availability = new AvailabilityDto(book.getAvailability());
     }
 }

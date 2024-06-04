@@ -1,12 +1,12 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.converters;
 
-import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
+import com.spring.batch.api.products.interfaceadapters.presenters.dto.Dto;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public interface Presenter<T, D extends ProductDto> {
+public interface Presenter<T, D extends Dto> {
 
     D convert(T entity);
 

@@ -18,12 +18,12 @@ public class BookBusiness extends ProductBusiness {
     }
 
     public void updateToInsert(String sku, Product product) {
-        product.getBook().getAvailability().setSku(sku);
-        product.getBook().getAvailability().setUpdatedAt(LocalDateTime.now(clock));
+        /*product.getBook().getAvailability().setSku(sku);
+        product.getBook().getAvailability().setUpdatedAt(LocalDateTime.now(clock));*/
     }
 
     public void verifyAndUpdateBook(String title, Integer pages, Genre genre, String publisher, Product product) throws BusinessException {
-        boolean hasToUpdate = false;
+        /*boolean hasToUpdate = false;
 
         if (title != null && !title.isBlank() && title.compareTo(product.getBook().getTitle()) != 0) {
             product.getBook().setTitle(title);
@@ -47,21 +47,21 @@ public class BookBusiness extends ProductBusiness {
 
         if (!hasToUpdate) {
             throw new BusinessException("NOTHING_TO_UPDATE");
-        }
+        }*/
     }
 
-    public String createSku(Product product) {
+    /*public String createSku(Product product) {
         return super.getSku(List.of(product.getBook().getIsbn()));
-    }
+    }*/
 
     @Override
     public void updateQuantity(Integer quantity, Integer protection, LocalDateTime updatedAt, Product product) throws BusinessException {
-        super.checkIfShouldUpdateQuantity(product.getBook().getAvailability().getUpdatedAt(),
+        /*super.checkIfShouldUpdateQuantity(product.getBook().getAvailability().getUpdatedAt(),
                 updatedAt, quantity, protection);
 
         product.getBook().getAvailability().setUpdatedAt(updatedAt);
         product.getBook().getAvailability().setQuantity(quantity);
-        product.getBook().getAvailability().setProtection(protection);
+        product.getBook().getAvailability().setProtection(protection);*/
     }
 
     @Override

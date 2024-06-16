@@ -1,7 +1,6 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.batch.api.products.entities.availability.ProductAvailability;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +14,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AvailabilityDto {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -44,14 +44,4 @@ public class AvailabilityDto {
     @PositiveOrZero
     @NotNull
     private BigDecimal height;
-
-    @Builder
-    public AvailabilityDto(ProductAvailability availability) {
-        this.sku = availability.getSku();
-        this.quantity = availability.getQuantity();
-        this.protection = availability.getProtection();
-        this.width = availability.getDimensions().getWidth();
-        this.length = availability.getDimensions().getLength();
-        this.height = availability.getDimensions().getHeight();
-    }
 }

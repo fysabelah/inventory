@@ -32,17 +32,17 @@ public class ElectronicBusiness extends ProductBusiness {
     }
 
     public void setSku(Product product) {
-        String model = product.getElectronic().getModel();
+        /*String model = product.getElectronic().getModel();
         String brand = product.getElectronic().getBrand();
 
         product.getElectronic().getAvailability().forEach(item -> {
             item.setSku(createSku(model, brand, item.getColor()));
             item.setUpdatedAt(LocalDateTime.now(clock));
-        });
+        });*/
     }
 
     public void updateAvailability(Product product, String sku, ProductAvailabilityElectronic availabilityElectronic) {
-        List<ProductAvailabilityElectronic> items = product.getElectronic().getAvailability()
+        /*List<ProductAvailabilityElectronic> items = product.getElectronic().getAvailability()
                 .stream()
                 .filter(item -> !item.getSku().equals(sku))
                 .collect(Collectors.toList());
@@ -52,11 +52,11 @@ public class ElectronicBusiness extends ProductBusiness {
 
         items.add(availabilityElectronic);
 
-        product.getElectronic().setAvailability(items);
+        product.getElectronic().setAvailability(items);*/
     }
 
     public void verifyAndUpdate(Product product, String model, String brand, String name, String features) throws BusinessException {
-        boolean isToUpdate = false;
+       /* boolean isToUpdate = false;
 
         if (model != null && !model.isBlank() && !product.getElectronic().getModel().equals(model)) {
             product.getElectronic().setModel(model);
@@ -82,6 +82,6 @@ public class ElectronicBusiness extends ProductBusiness {
             throw new BusinessException("NOTHING_TO_UPDATE");
         }
 
-        setSku(product);
+        setSku(product);*/
     }
 }

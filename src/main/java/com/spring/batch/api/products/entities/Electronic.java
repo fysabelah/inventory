@@ -3,15 +3,17 @@ package com.spring.batch.api.products.entities;
 import com.spring.batch.api.products.entities.availability.ProductAvailabilityElectronic;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Electronic {
+@Document(value = "electronics")
+public class Electronic extends Product {
 
     private String model;
 
@@ -23,6 +25,6 @@ public class Electronic {
 
     private ElectronicType type;
 
-    private List<ProductAvailabilityElectronic> availability;
+    private Set<ProductAvailabilityElectronic> availability;
 
 }

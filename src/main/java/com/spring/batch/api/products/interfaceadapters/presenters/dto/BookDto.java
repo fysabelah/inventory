@@ -1,7 +1,6 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.batch.api.products.entities.Book;
 import com.spring.batch.api.products.utils.enums.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +14,7 @@ import lombok.*;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 public class BookDto extends CategoryInformation {
 
     @Schema(description = "Número de livro internacional padronizado", example = "978-0-596-52068-7")
@@ -41,14 +41,4 @@ public class BookDto extends CategoryInformation {
 
     @NotNull
     private AvailabilityDto availability;
-
-    @Builder
-    public BookDto(Book book) {
-        this.isbn = book.getIsbn();
-        this.title = book.getTitle();
-        this.pages = book.getPages();
-        this.genre = book.getGenre();
-        this.publisher = book.getPublisher();
-        this.availability = new AvailabilityDto(book.getAvailability());
-    }
 }

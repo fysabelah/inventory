@@ -2,15 +2,17 @@ package com.spring.batch.api.products.entities;
 
 import com.spring.batch.api.products.entities.availability.ProductAvailabilityShoe;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Shoe {
+@Document(value = "shoes")
+public class Shoes extends Product {
 
     private String brand;
 
@@ -18,5 +20,5 @@ public class Shoe {
 
     private String color;
 
-    private List<ProductAvailabilityShoe> availability;
+    private Set<ProductAvailabilityShoe> availability;
 }

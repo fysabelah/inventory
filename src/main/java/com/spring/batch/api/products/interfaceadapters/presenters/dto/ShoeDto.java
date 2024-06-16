@@ -1,18 +1,17 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.dto;
 
-import com.spring.batch.api.products.entities.Shoe;
-import com.spring.batch.api.products.entities.availability.ProductAvailabilityShoe;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ShoeDto extends CategoryInformation {
 
     @NotBlank(message = "BRAND_CANT_BE_EMPTY")
@@ -37,25 +36,18 @@ public class ShoeDto extends CategoryInformation {
     @Setter
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ShoeAvailabilityDto extends AvailabilityDto {
 
         @Pattern(regexp = "\\d{2}")
         @Schema(description = "Tamanho", example = "38")
         private String size;
 
-        public ShoeAvailabilityDto(ProductAvailabilityShoe availability) {
-            super(availability);
-            this.size = availability.getSize();
+        @Builder(builderMethodName = "shoes")
+        public ShoeAvailabilityDto(String sku, Integer quantity, Integer protection, BigDecimal width, BigDecimal length,
+                                   BigDecimal height, String size) {
+            super(sku, quantity, protection, width, length, height);
+            this.size = size;
         }
-    }
-
-    @Builder
-    public ShoeDto(Shoe shoe) {
-        this.brand = shoe.getBrand();
-        this.name = shoe.getName();
-        this.color = shoe.getColor();
-        this.availability = shoe.getAvailability().stream()
-                .map(ShoeAvailabilityDto::new)
-                .collect(Collectors.toList());
     }
 }

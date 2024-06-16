@@ -1,0 +1,11 @@
+{
+  "sku": null,
+  "quantity": 2,
+  "protection": 1,
+  "updatedAt": null,
+  "dimensions": {
+    "width": 1.6,
+    "length": 1.5,
+    "height": 1
+  }
+}

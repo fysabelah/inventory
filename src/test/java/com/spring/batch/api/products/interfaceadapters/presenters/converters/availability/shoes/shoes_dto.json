@@ -1,0 +1,18 @@
+[
+  {
+    "quantity": 10,
+    "protection": 1,
+    "width": 30,
+    "length": 65,
+    "height": 55,
+    "size": "38"
+  },
+  {
+    "quantity": 10,
+    "protection": 2,
+    "width": 33,
+    "length": 70,
+    "height": 55,
+    "size": "40"
+  }
+]

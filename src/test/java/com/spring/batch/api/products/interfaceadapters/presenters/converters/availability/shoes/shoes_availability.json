@@ -1,0 +1,26 @@
+[
+  {
+    "sku": null,
+    "quantity": 10,
+    "protection": 1,
+    "updatedAt": null,
+    "dimensions": {
+      "width": 30,
+      "length": 65,
+      "height": 55
+    },
+    "size": "38"
+  },
+  {
+    "sku": null,
+    "quantity": 10,
+    "protection": 2,
+    "updatedAt": null,
+    "dimensions": {
+      "width": 33,
+      "length": 70,
+      "height": 55
+    },
+    "size": "40"
+  }
+]

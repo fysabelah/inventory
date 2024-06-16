@@ -1,7 +1,5 @@
 package com.spring.batch.api.products.interfaceadapters.presenters.dto;
 
-import com.spring.batch.api.products.entities.Electronic;
-import com.spring.batch.api.products.entities.availability.ProductAvailabilityElectronic;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -10,13 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ElectronicDto extends CategoryInformation {
 
     @NotBlank(message = "MODEL_CANT_BE_EMPTY")
@@ -57,21 +56,10 @@ public class ElectronicDto extends CategoryInformation {
         @Size(max = 50, message = "MAXIMUM_SIZE_EXCEEDED")
         private String color;
 
-        public ElectronicAvailabilityDto(ProductAvailabilityElectronic electronic) {
-            super(electronic);
-            this.color = electronic.getColor();
+        @Builder(builderMethodName = "electronic")
+        public ElectronicAvailabilityDto(String sku, Integer quantity, Integer protection, BigDecimal width, BigDecimal length, BigDecimal height, String color) {
+            super(sku, quantity, protection, width, length, height);
+            this.color = color;
         }
-    }
-
-    @Builder
-    public ElectronicDto(Electronic electronic) {
-        this.model = electronic.getModel();
-        this.brand = electronic.getBrand();
-        this.name = electronic.getName();
-        this.features = electronic.getFeatures();
-        this.type = electronic.getType();
-        this.availability = electronic.getAvailability()
-                .stream().map(ElectronicAvailabilityDto::new)
-                .collect(Collectors.toList());
     }
 }

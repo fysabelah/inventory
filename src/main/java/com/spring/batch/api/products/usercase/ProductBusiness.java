@@ -2,6 +2,7 @@ package com.spring.batch.api.products.usercase;
 
 import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
+import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
 
 import java.time.Clock;
@@ -17,7 +18,7 @@ public abstract class ProductBusiness {
         this.clock = clock;
     }
 
-    public String getSku(List<String> fields) {
+    public String getSku(List<String> fields, ProductCategory category) {
         List<String> normalized = new ArrayList<>();
 
         for (String field : fields) {
@@ -29,6 +30,20 @@ public abstract class ProductBusiness {
 
     private String normalize(String value) {
         return value.replaceAll("\\s", "-");
+    }
+
+    protected String createSku(List<String> fields, ProductCategory category) {
+        List<String> normalized = new ArrayList<>();
+
+        for (String field : fields) {
+            normalized.add(normalize(field));
+        }
+
+        return category.name().concat(String.join("-", normalized));
+    }
+
+    protected String createSku(String field, ProductCategory category) {
+        return category.name().concat(normalize(field));
     }
 
     /* private String createShoesSku(Shoe shoe) {

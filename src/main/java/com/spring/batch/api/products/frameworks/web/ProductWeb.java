@@ -1,6 +1,7 @@
 package com.spring.batch.api.products.frameworks.web;
 
-import com.spring.batch.api.products.interfaceadapters.controllers.ProductController;
+import com.spring.batch.api.products.interfaceadapters.controllers.implementation.ProductController;
+import com.spring.batch.api.products.interfaceadapters.controllers.interfaces.ProductControllerInterface;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.Genre;
@@ -27,14 +28,16 @@ public class ProductWeb {
 
     private final ProductController controller;
 
+    private ProductControllerInterface controllerInterface;
+
     public ProductWeb(ProductController controller) {
         this.controller = controller;
     }
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     @Operation(summary = "Cadastrar produto")
-    public ResponseEntity<ProductDto> insert(@RequestBody @Valid ProductDto body) {
-        return ResponseEntity.ok(controller.insert(body));
+    public ResponseEntity<ProductDto> insert(@RequestBody @Valid ProductDto body) throws NoSuchMethodException, BusinessException {
+        return ResponseEntity.ok(controllerInterface.insert(body));
     }
 
     @GetMapping(produces = "application/json", path = "/category/{category}/sku/{sku}")

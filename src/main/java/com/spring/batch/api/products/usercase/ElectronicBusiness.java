@@ -1,14 +1,16 @@
 package com.spring.batch.api.products.usercase;
 
+import com.spring.batch.api.products.entities.Electronic;
 import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.entities.availability.ProductAvailabilityElectronic;
+import com.spring.batch.api.products.utils.enums.ElectronicType;
+import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ElectronicBusiness extends ProductBusiness {
@@ -27,18 +29,19 @@ public class ElectronicBusiness extends ProductBusiness {
 
     }
 
-    public String createSku(String model, String brand, String color) {
-        return super.getSku(List.of(model, brand, color));
-    }
+    public void updateToInsert(Electronic electronic) {
+        String model = electronic.getModel();
+        String brand = electronic.getBrand();
+        ElectronicType type = electronic.getType();
 
-    public void setSku(Product product) {
-        /*String model = product.getElectronic().getModel();
-        String brand = product.getElectronic().getBrand();
+        electronic.getAvailability().forEach(availability -> {
+            availability.setSku(
+                    super.createSku(List.of(model, brand, type.name(), availability.getColor()),
+                            ProductCategory.ELECTRONICS)
+            );
 
-        product.getElectronic().getAvailability().forEach(item -> {
-            item.setSku(createSku(model, brand, item.getColor()));
-            item.setUpdatedAt(LocalDateTime.now(clock));
-        });*/
+            availability.setUpdatedAt(LocalDateTime.now(clock));
+        });
     }
 
     public void updateAvailability(Product product, String sku, ProductAvailabilityElectronic availabilityElectronic) {

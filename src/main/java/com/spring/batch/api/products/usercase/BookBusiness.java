@@ -1,14 +1,14 @@
 package com.spring.batch.api.products.usercase;
 
+import com.spring.batch.api.products.entities.Book;
 import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.utils.enums.Genre;
+import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
 
 @Component
 public class BookBusiness extends ProductBusiness {
@@ -17,9 +17,9 @@ public class BookBusiness extends ProductBusiness {
         super(clock);
     }
 
-    public void updateToInsert(String sku, Product product) {
-        /*product.getBook().getAvailability().setSku(sku);
-        product.getBook().getAvailability().setUpdatedAt(LocalDateTime.now(clock));*/
+    public void updateToInsert(Book book) {
+        book.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
+        book.getAvailability().setSku(createSku(book));
     }
 
     public void verifyAndUpdateBook(String title, Integer pages, Genre genre, String publisher, Product product) throws BusinessException {
@@ -53,6 +53,10 @@ public class BookBusiness extends ProductBusiness {
     /*public String createSku(Product product) {
         return super.getSku(List.of(product.getBook().getIsbn()));
     }*/
+
+    private String createSku(Book book) {
+        return super.createSku(book.getIsbn(), ProductCategory.BOOKS);
+    }
 
     @Override
     public void updateQuantity(Integer quantity, Integer protection, LocalDateTime updatedAt, Product product) throws BusinessException {

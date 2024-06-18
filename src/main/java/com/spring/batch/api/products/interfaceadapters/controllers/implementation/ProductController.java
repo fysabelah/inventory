@@ -1,9 +1,5 @@
-package com.spring.batch.api.products.interfaceadapters.controllers;
+package com.spring.batch.api.products.interfaceadapters.controllers.implementation;
 
-import com.spring.batch.api.products.entities.Product;
-import com.spring.batch.api.products.interfaceadapters.gateways.ProductGateway;
-import com.spring.batch.api.products.interfaceadapters.presenters.converters.products.BookPresenter;
-import com.spring.batch.api.products.interfaceadapters.presenters.converters.products.PresenterProduct;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.Genre;
@@ -11,33 +7,27 @@ import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.enums.ProductSize;
 import com.spring.batch.api.products.utils.pagination.PagedResponse;
 import com.spring.batch.api.products.utils.pagination.Pagination;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 public class ProductController {
 
-    private PresenterProduct<? extends Product> presenter;
+    /*private PresenterProduct<? extends Product> presenter;*/
 
-    private ProductGateway gateway;
+    /*private ProductGateway gateway;*/
 
     /*private ProductBusinessInterface business;*/
 
-    @Autowired
-    public ProductController(BookPresenter presenter, ProductGateway gateway) {
+    /*@Autowired
+    default ProductController(BookPresenter presenter, ProductGateway gateway) {
         this.presenter = presenter;
         this.gateway = gateway;
     }
+*/
 
     public ProductDto insert(ProductDto body) {
-        Product product = presenter.convert(body);
-
-        List<String> skus;
-
-
         return null;
     }
 
@@ -49,7 +39,7 @@ public class ProductController {
     }
 
     public void updateStatus(String id, boolean status) {
-        gateway.changeStatus(id, status);
+        /*gateway.changeStatus(id, status);*/
     }
 
     public void changeQuantity(ProductCategory category, String sku, Integer quantity, LocalDateTime updatedAt, Integer protection) {
@@ -61,15 +51,15 @@ public class ProductController {
     }
 
     public ProductDto update(String id, ProductDto productDto) {
-        Product product = gateway.findById(id);
+        /*Product product = gateway.findById(id);*/
 
         return null;
     }
 
     public void delete(String id) {
-        Product product = gateway.findById(id);
+        /*Product product = gateway.findById(id);
 
-        gateway.delete(product);
+        gateway.delete(product);*/
     }
 
     public PagedResponse findAllBooks(String title, Genre genre, boolean status, Pagination page) {

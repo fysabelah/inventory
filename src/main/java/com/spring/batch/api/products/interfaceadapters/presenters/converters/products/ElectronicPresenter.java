@@ -24,7 +24,7 @@ public class ElectronicPresenter implements PresenterProduct<Electronic> {
         productDto.setCategory(ProductCategory.ELECTRONICS);
         productDto.setActive(entity.isActive());
         productDto.setDescription(entity.getDescription());
-        productDto.setValue(productDto.getValue());
+        productDto.setValue(entity.getValue());
 
         ElectronicDto electronicDto = ElectronicDto.builder()
                 .model(entity.getModel())

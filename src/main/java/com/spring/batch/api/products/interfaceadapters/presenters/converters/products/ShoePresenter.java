@@ -24,7 +24,7 @@ public class ShoePresenter implements PresenterProduct<Shoes> {
         productDto.setCategory(ProductCategory.SHOES);
         productDto.setActive(entity.isActive());
         productDto.setDescription(entity.getDescription());
-        productDto.setValue(productDto.getValue());
+        productDto.setValue(entity.getValue());
 
         ShoeDto shoeDto = ShoeDto.builder()
                 .brand(entity.getBrand())

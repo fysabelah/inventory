@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;

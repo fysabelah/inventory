@@ -24,7 +24,7 @@ public class BookPresenter implements PresenterProduct<Book> {
         productDto.setCategory(ProductCategory.BOOKS);
         productDto.setActive(entity.isActive());
         productDto.setDescription(entity.getDescription());
-        productDto.setValue(productDto.getValue());
+        productDto.setValue(entity.getValue());
 
         BookDto bookDto = BookDto.builder()
                 .isbn(entity.getIsbn())

@@ -1,0 +1,20 @@
+{
+  "description": "It's a very interesting book",
+  "category": "BOOKS",
+  "value": 130.69,
+  "active": true,
+  "categoryInformation": {
+    "isbn": "78598-9898",
+    "title": "Interesting Book 2",
+    "pages": 231,
+    "genre": "POETRY",
+    "publisher": "I'm the publisher",
+    "availability": {
+      "quantity": 5,
+      "protection": 1,
+      "width": 1.6,
+      "length": 1.5,
+      "height": 1
+    }
+  }
+}

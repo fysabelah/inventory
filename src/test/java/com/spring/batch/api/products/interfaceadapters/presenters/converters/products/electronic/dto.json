@@ -1,0 +1,31 @@
+{
+  "description": "It's a very interesting clothes",
+  "category": "ELECTRONICS",
+  "value": 2049.98,
+  "active": false,
+  "categoryInformation": {
+    "model": "SOME TV",
+    "brand": "TV BRAND",
+    "name": "I'm a very pretty TV",
+    "features": "Very good tv with very good features!! Watch it then will you see it",
+    "type": "TV",
+    "availability": [
+      {
+        "quantity": 10,
+        "protection": 1,
+        "width": 1.6,
+        "length": 1.5,
+        "height": 1,
+        "color": "yellow"
+      },
+      {
+        "quantity": 10,
+        "protection": 2,
+        "width": 1.4,
+        "length": 1.2,
+        "height": 1,
+        "color": "red"
+      }
+    ]
+  }
+}

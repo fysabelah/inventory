@@ -3,12 +3,10 @@ package com.spring.batch.api.products.interfaceadapters.presenters.converters.pr
 import com.spring.batch.api.products.entities.Book;
 import com.spring.batch.api.products.interfaceadapters.presenters.converters.availability.ProductAvailabilityPresenter;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.BookDto;
-import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
-import com.spring.batch.api.products.utils.enums.ProductCategory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookPresenter implements PresenterProduct<Book> {
+class BookPresenter {
 
     private final ProductAvailabilityPresenter availabilityPresenter;
 
@@ -16,17 +14,8 @@ public class BookPresenter implements PresenterProduct<Book> {
         this.availabilityPresenter = availabilityPresenter;
     }
 
-    @Override
-    public ProductDto convert(Book entity) {
-        ProductDto productDto = new ProductDto();
-
-        productDto.setId(entity.getId());
-        productDto.setCategory(ProductCategory.BOOKS);
-        productDto.setActive(entity.isActive());
-        productDto.setDescription(entity.getDescription());
-        productDto.setValue(entity.getValue());
-
-        BookDto bookDto = BookDto.builder()
+    public BookDto convert(Book entity) {
+        return BookDto.builder()
                 .isbn(entity.getIsbn())
                 .title(entity.getTitle())
                 .pages(entity.getPages())
@@ -34,17 +23,10 @@ public class BookPresenter implements PresenterProduct<Book> {
                 .publisher(entity.getPublisher())
                 .availability(availabilityPresenter.convert(entity.getAvailability()))
                 .build();
-
-        productDto.setCategoryInformation(bookDto);
-
-        return productDto;
     }
 
-    @Override
-    public Book convert(ProductDto dto) {
-        BookDto bookDto = (BookDto) dto.getCategoryInformation();
-
-        Book book = Book.builder()
+    public Book convert(BookDto bookDto) {
+        return Book.builder()
                 .isbn(bookDto.getIsbn())
                 .title(bookDto.getTitle())
                 .genre(bookDto.getGenre())
@@ -52,13 +34,6 @@ public class BookPresenter implements PresenterProduct<Book> {
                 .publisher(bookDto.getPublisher())
                 .availability(availabilityPresenter.convert(bookDto.getAvailability()))
                 .build();
-
-        book.setId(dto.getId());
-        book.setDescription(dto.getDescription());
-        book.setValue(dto.getValue());
-        book.setActive(dto.isActive());
-
-        return book;
     }
 
 }

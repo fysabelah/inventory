@@ -3,9 +3,15 @@ package com.spring.batch.api.products.interfaceadapters.gateways;
 import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.frameworks.db.ProductRepository;
 import com.spring.batch.api.products.utils.MessageUtil;
-import com.spring.batch.api.products.utils.enums.ProductCategory;
+import com.spring.batch.api.products.utils.enums.ElectronicType;
+import com.spring.batch.api.products.utils.enums.Genre;
+import com.spring.batch.api.products.utils.enums.ProductSize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -14,8 +20,11 @@ public class ProductGateway {
 
     private final ProductRepository repository;
 
-    public ProductGateway(ProductRepository repository) {
+    private final MongoTemplate template;
+
+    public ProductGateway(ProductRepository repository, MongoTemplate template) {
         this.repository = repository;
+        this.template = template;
     }
 
     public Product findById(String id) {
@@ -31,40 +40,44 @@ public class ProductGateway {
         return repository.save(product);
     }
 
-    public void changeStatus(String id, boolean status) {
-        Product product = findById(id);
-        product.setActive(status);
-
-        repository.save(product);
-    }
-
     public void delete(Product product) {
         repository.delete(product);
     }
 
-    public Product findBySku(ProductCategory category, String sku) {
-        return findBySku(sku, category)
-                .orElseThrow(() -> new NoSuchElementException(MessageUtil.getMessage("NOT_FOUND")));
-    }
-
-    public Optional<Product> findBySku(String sku, ProductCategory category) {
-        if (sku == null || sku.isBlank() || category == null) {
+    public List<Product> findBySkus(List<String> skus) {
+        if (skus == null || skus.isEmpty()) {
             throw new IllegalArgumentException(MessageUtil.getMessage("MISSING_PARAMETERS"));
         }
 
-       /* if (ProductCategory.CLOTHES.equals(category)) {
-            return repository.findByClothesAvailabilitySku(sku);
+        return repository.findBySkus(skus, template);
+    }
+
+    public Product findBySkus(String sku) {
+        return findBySkuOptional(sku)
+                .orElseThrow(() -> new NoSuchElementException(MessageUtil.getMessage("NOT_FOUND")));
+    }
+
+    public Optional<Product> findBySkuOptional(String sku) {
+        if (sku == null || sku.isBlank()) {
+            throw new IllegalArgumentException(MessageUtil.getMessage("MISSING_PARAMETERS"));
         }
 
-        if (ProductCategory.BOOKS.equals(category)) {
-            return repository.findByBookAvailabilitySku(sku);
-        }
+        return repository.findBySku(sku);
+    }
 
-        if (ProductCategory.ELECTRONICS.equals(category)) {
-            return repository.findByElectronicAvailabilitySkuEquals(sku);
-        }
+    public Page<Product> findAll(String title, Genre genre, boolean status, Pageable page) {
+        return null;
+    }
 
-        return repository.findByShoeAvailabilitySku(sku);*/
-        return  Optional.empty();
+    public Page<Product> findAll(String name, String brand, String model, ElectronicType electronicType, boolean status, Pageable page) {
+        return null;
+    }
+
+    public Page<Product> findAll(String name, String brand, String model, ProductSize size, boolean status, Pageable page) {
+        return null;
+    }
+
+    public Page<Product> findAll(String name, String brand, String size, boolean status, Pageable page) {
+        return null;
     }
 }

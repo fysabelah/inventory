@@ -11,16 +11,12 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 
 @Component
-public class BookBusiness extends ProductBusiness {
+public class BookBusiness {
 
-    public BookBusiness(Clock clock) {
-        super(clock);
-    }
-
-    public void updateToInsert(Book book) {
+    /*public void updateToInsert(Book book) {
         book.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
         book.getAvailability().setSku(createSku(book));
-    }
+    }*/
 
     public void verifyAndUpdateBook(String title, Integer pages, Genre genre, String publisher, Product product) throws BusinessException {
         /*boolean hasToUpdate = false;
@@ -53,23 +49,23 @@ public class BookBusiness extends ProductBusiness {
     /*public String createSku(Product product) {
         return super.getSku(List.of(product.getBook().getIsbn()));
     }*/
-
+/*
     private String createSku(Book book) {
         return super.createSku(book.getIsbn(), ProductCategory.BOOKS);
     }
 
     @Override
     public void updateQuantity(Integer quantity, Integer protection, LocalDateTime updatedAt, Product product) throws BusinessException {
-        /*super.checkIfShouldUpdateQuantity(product.getBook().getAvailability().getUpdatedAt(),
+        *//*super.checkIfShouldUpdateQuantity(product.getBook().getAvailability().getUpdatedAt(),
                 updatedAt, quantity, protection);
 
         product.getBook().getAvailability().setUpdatedAt(updatedAt);
         product.getBook().getAvailability().setQuantity(quantity);
-        product.getBook().getAvailability().setProtection(protection);*/
+        product.getBook().getAvailability().setProtection(protection);*//*
     }
 
     @Override
     public void updateSpecificInformation(Product toUpdate, Product newInformation) throws BusinessException {
 
-    }
+    }*/
 }

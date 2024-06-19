@@ -1,11 +1,9 @@
 package com.spring.batch.api.products.frameworks.web;
 
-import com.spring.batch.api.products.interfaceadapters.controllers.implementation.ProductController;
-import com.spring.batch.api.products.interfaceadapters.controllers.interfaces.ProductControllerInterface;
+import com.spring.batch.api.products.interfaceadapters.controllers.ProductController;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.Genre;
-import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.enums.ProductSize;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
 import com.spring.batch.api.products.utils.pagination.PagedResponse;
@@ -28,23 +26,20 @@ public class ProductWeb {
 
     private final ProductController controller;
 
-    private ProductControllerInterface controllerInterface;
-
     public ProductWeb(ProductController controller) {
         this.controller = controller;
     }
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     @Operation(summary = "Cadastrar produto")
-    public ResponseEntity<ProductDto> insert(@RequestBody @Valid ProductDto body) throws NoSuchMethodException, BusinessException {
-        return ResponseEntity.ok(controllerInterface.insert(body));
+    public ResponseEntity<ProductDto> insert(@RequestBody @Valid ProductDto body) throws BusinessException {
+        return ResponseEntity.ok(controller.insert(body));
     }
 
-    @GetMapping(produces = "application/json", path = "/category/{category}/sku/{sku}")
+    @GetMapping(produces = "application/json", path = "/sku/{sku}")
     @Operation(summary = "Recuperar produto por sku")
-    public ResponseEntity<ProductDto> findBySku(@PathVariable String sku,
-                                                @PathVariable ProductCategory category) {
-        return ResponseEntity.ok(controller.findBySku(sku, category));
+    public ResponseEntity<ProductDto> findBySku(@PathVariable String sku) {
+        return ResponseEntity.ok(controller.findBySku(sku));
     }
 
     @PutMapping(value = "/{id}")
@@ -56,14 +51,13 @@ public class ProductWeb {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/category/{category}/stock/{sku}")
+    @PutMapping(value = "/stock/{sku}")
     @Operation(summary = "Atualizar quantidade disponível")
-    public ResponseEntity<Void> updateQuantityAvailable(@PathVariable ProductCategory category,
-                                                        @RequestParam @PositiveOrZero(message = "AVAILABLE_QUANTITY_DO_NOT_SHOULD_BE_NEGATIVE") Integer quantity,
+    public ResponseEntity<Void> updateQuantityAvailable(@RequestParam @PositiveOrZero(message = "AVAILABLE_QUANTITY_DO_NOT_SHOULD_BE_NEGATIVE") Integer quantity,
                                                         @RequestParam LocalDateTime updatedAt,
                                                         @PathVariable String sku,
-                                                        @RequestParam @PositiveOrZero(message = "PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE") Integer protection) throws BusinessException, NoSuchMethodException {
-        controller.changeQuantity(category, sku, quantity, updatedAt, protection);
+                                                        @RequestParam @PositiveOrZero(message = "PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE") Integer protection) {
+        controller.changeQuantity(sku, quantity, updatedAt, protection);
 
         return ResponseEntity.noContent().build();
     }
@@ -71,13 +65,13 @@ public class ProductWeb {
     @PutMapping(value = "/update/{id}")
     @Operation(summary = "Atualizar informações do produto")
     public ResponseEntity<ProductDto> update(@PathVariable String id,
-                                             @RequestBody ProductDto product) throws BusinessException, NoSuchMethodException {
+                                             @RequestBody ProductDto product) {
         return ResponseEntity.ok(controller.update(id, product));
     }
 
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Deletar produto")
-    public ResponseEntity<ProductDto> delete(@PathVariable String id) throws NoSuchMethodException {
+    public ResponseEntity<ProductDto> delete(@PathVariable String id) {
         controller.delete(id);
 
         return ResponseEntity.noContent().build();

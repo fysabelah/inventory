@@ -3,12 +3,10 @@ package com.spring.batch.api.products.interfaceadapters.presenters.converters.pr
 import com.spring.batch.api.products.entities.Electronic;
 import com.spring.batch.api.products.interfaceadapters.presenters.converters.availability.ElectronicAvailabilityPresenter;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ElectronicDto;
-import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
-import com.spring.batch.api.products.utils.enums.ProductCategory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ElectronicPresenter implements PresenterProduct<Electronic> {
+class ElectronicPresenter {
 
     private final ElectronicAvailabilityPresenter availabilityPresenter;
 
@@ -16,17 +14,8 @@ public class ElectronicPresenter implements PresenterProduct<Electronic> {
         this.availabilityPresenter = availabilityPresenter;
     }
 
-    @Override
-    public ProductDto convert(Electronic entity) {
-        ProductDto productDto = new ProductDto();
-
-        productDto.setId(entity.getId());
-        productDto.setCategory(ProductCategory.ELECTRONICS);
-        productDto.setActive(entity.isActive());
-        productDto.setDescription(entity.getDescription());
-        productDto.setValue(entity.getValue());
-
-        ElectronicDto electronicDto = ElectronicDto.builder()
+    public ElectronicDto convert(Electronic entity) {
+        return ElectronicDto.builder()
                 .model(entity.getModel())
                 .brand(entity.getBrand())
                 .name(entity.getName())
@@ -34,17 +23,10 @@ public class ElectronicPresenter implements PresenterProduct<Electronic> {
                 .type(entity.getType())
                 .availability(availabilityPresenter.convert(entity.getAvailability()))
                 .build();
-
-        productDto.setCategoryInformation(electronicDto);
-
-        return productDto;
     }
 
-    @Override
-    public Electronic convert(ProductDto dto) {
-        ElectronicDto electronicDto = (ElectronicDto) dto.getCategoryInformation();
-
-        Electronic electronic = Electronic.builder()
+    public Electronic convert(ElectronicDto electronicDto) {
+        return Electronic.builder()
                 .model(electronicDto.getModel())
                 .brand(electronicDto.getBrand())
                 .name(electronicDto.getName())
@@ -52,12 +34,5 @@ public class ElectronicPresenter implements PresenterProduct<Electronic> {
                 .type(electronicDto.getType())
                 .availability(availabilityPresenter.convert(electronicDto.getAvailability()))
                 .build();
-
-        electronic.setId(dto.getId());
-        electronic.setDescription(dto.getDescription());
-        electronic.setValue(dto.getValue());
-        electronic.setActive(dto.isActive());
-
-        return electronic;
     }
 }

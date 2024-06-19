@@ -1,16 +1,21 @@
 package com.spring.batch.api.products.usercase;
 
-import com.spring.batch.api.products.entities.Product;
+import com.spring.batch.api.products.entities.*;
 import com.spring.batch.api.products.interfaceadapters.presenters.dto.ProductDto;
+import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ProductBusiness {
+@Component
+@Primary
+public class ProductBusiness {
 
     protected final Clock clock;
 
@@ -39,33 +44,12 @@ public abstract class ProductBusiness {
             normalized.add(normalize(field));
         }
 
-        return category.name().concat(String.join("-", normalized));
+        return category.name().concat("-").concat(String.join("-", normalized));
     }
 
     protected String createSku(String field, ProductCategory category) {
-        return category.name().concat(normalize(field));
+        return category.name().concat("-").concat(normalize(field));
     }
-
-    /* private String createShoesSku(Shoe shoe) {
-         return normalize(shoe.getName())
-                 .concat("-")
-                 .concat(normalize(shoe.getBrand()))
-                 .concat("-")
-                 .concat(normalize(shoe.getColor()))
-                 .concat("-")
-                 .concat(normalize(shoe.getSize()));
-     }
-
-     private String createClothesSku(Clothes clothes) {
-         return normalize(clothes.getName())
-                 .concat("-")
-                 .concat(normalize(clothes.getModel()))
-                 .concat("-")
-                 .concat(normalize(clothes.getBrand()))
-                 .concat("-")
-                 .concat(normalize(clothes.getSize().name()));
-     }
- */
 
     protected void checkIfShouldUpdateQuantity(LocalDateTime lastUpdated, LocalDateTime updatedAt, Integer newQuantity, Integer protection) throws BusinessException {
         if (lastUpdated.isAfter(updatedAt)) {
@@ -87,7 +71,79 @@ public abstract class ProductBusiness {
         product.setValue(productDto.getValue());
     }
 
-    public abstract void updateQuantity(Integer quantity, Integer protection, LocalDateTime updatedAt, Product product) throws BusinessException;
+    public void updateQuantity(Integer quantity, Integer protection, LocalDateTime updatedAt, Product product) throws BusinessException {
 
-    public abstract void updateSpecificInformation(Product toUpdate, Product newInformation) throws BusinessException;
+
+    }
+
+    public void updateSpecificInformation(Product toUpdate, Product newInformation) throws BusinessException {
+
+    }
+
+    public void updateToInsert(Product product) {
+        if (ProductCategory.BOOKS.equals(product.getCategory())) {
+            updateToInsert(product.getBook());
+        } else if (ProductCategory.ELECTRONICS.equals(product.getCategory())) {
+            updateToInsert(product.getElectronic());
+        } else if (ProductCategory.CLOTHES.equals(product.getCategory())) {
+            insertToUpdate(product.getClothes());
+        } else {
+            insertToUpdate(product.getShoes());
+        }
+    }
+
+    private void insertToUpdate(Shoes shoes) {
+        String name = shoes.getName();
+        String brand = shoes.getBrand();
+        String color = shoes.getColor();
+
+        shoes.getAvailability().forEach(productAvailabilityShoe -> {
+            productAvailabilityShoe.setUpdatedAt(LocalDateTime.now(clock));
+            productAvailabilityShoe.setSku(
+                    createSku(
+                            List.of(name, brand, color, productAvailabilityShoe.getSize()),
+                            ProductCategory.SHOES
+                    )
+            );
+        });
+    }
+
+    private void updateToInsert(Book book) {
+        book.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
+        book.getAvailability().setSku(createSku(book.getIsbn(), ProductCategory.BOOKS));
+    }
+
+    private void updateToInsert(Electronic electronic) {
+        String model = electronic.getModel();
+        String brand = electronic.getBrand();
+        ElectronicType type = electronic.getType();
+
+        electronic.getAvailability().forEach(availability -> {
+            availability.setSku(
+                    createSku(List.of(model, brand, type.name(), availability.getColor()),
+                            ProductCategory.ELECTRONICS)
+            );
+
+            availability.setUpdatedAt(LocalDateTime.now(clock));
+        });
+    }
+
+    private void insertToUpdate(Clothes clothes) {
+        String model = clothes.getModel();
+        String brand = clothes.getBrand();
+        String color = clothes.getColor();
+
+        clothes.getAvailability().forEach(availability -> {
+            availability.setUpdatedAt(LocalDateTime.now(clock));
+            availability.setSku(createSku(List.of(model, brand, color, availability.getSize().name()), ProductCategory.CLOTHES));
+        });
+    }
+
+    public void updateQuantity(Integer quantity, LocalDateTime updatedAt, Integer protection, String sku, Product product) {
+
+    }
+
+    public void update(Product saved, Product product) {
+
+    }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -67,25 +68,12 @@ public class ProductController {
         gateway.update(product);
     }
 
-    // TODO PAREI A VALIDAÇÃO AQUI
-    public void changeQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection) {
+    public void changeQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection) throws BusinessException {
         Product product = gateway.findBySkus(sku);
 
         business.updateQuantity(quantity, updatedAt, protection, sku, product);
 
         gateway.update(product);
-    }
-
-    public ProductDto update(String id, ProductDto productDto) {
-        Product saved = gateway.findById(id);
-
-        Product product = presenter.convert(productDto);
-
-        business.update(saved, product);
-
-        product = gateway.update(product);
-
-        return presenter.convert(product);
     }
 
     public void delete(String id) {
@@ -136,5 +124,15 @@ public class ProductController {
                 brand, size, status, page);
 
         return presenter.convert(products);
+    }
+
+    public ProductDto updateValue(String id, BigDecimal value) throws BusinessException {
+        Product product = gateway.findById(id);
+
+        business.checkIfUpdateValue(product, value);
+
+        product = gateway.update(product);
+
+        return presenter.convert(product);
     }
 }

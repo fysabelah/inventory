@@ -17,6 +17,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @RestController
@@ -56,17 +57,17 @@ public class ProductWeb {
     public ResponseEntity<Void> updateQuantityAvailable(@RequestParam @PositiveOrZero(message = "AVAILABLE_QUANTITY_DO_NOT_SHOULD_BE_NEGATIVE") Integer quantity,
                                                         @RequestParam LocalDateTime updatedAt,
                                                         @PathVariable String sku,
-                                                        @RequestParam @PositiveOrZero(message = "PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE") Integer protection) {
+                                                        @RequestParam @PositiveOrZero(message = "PROTECTION_DO_NOT_SHOULD_BE_NEGATIVE") Integer protection) throws BusinessException {
         controller.changeQuantity(sku, quantity, updatedAt, protection);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/update/{id}")
-    @Operation(summary = "Atualizar informações do produto")
+    @Operation(summary = "Atualizar informações de preço")
     public ResponseEntity<ProductDto> update(@PathVariable String id,
-                                             @RequestBody ProductDto product) {
-        return ResponseEntity.ok(controller.update(id, product));
+                                             @RequestBody @PositiveOrZero BigDecimal value) throws BusinessException {
+        return ResponseEntity.ok(controller.updateValue(id, value));
     }
 
     @DeleteMapping(value = "/delete/{id}")

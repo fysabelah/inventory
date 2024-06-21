@@ -8,7 +8,6 @@ import com.spring.batch.api.products.utils.enums.Genre;
 import com.spring.batch.api.products.utils.enums.ProductSize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +19,8 @@ public class ProductGateway {
 
     private final ProductRepository repository;
 
-    private final MongoTemplate template;
-
-    public ProductGateway(ProductRepository repository, MongoTemplate template) {
+    public ProductGateway(ProductRepository repository) {
         this.repository = repository;
-        this.template = template;
     }
 
     public Product findById(String id) {
@@ -49,7 +45,7 @@ public class ProductGateway {
             throw new IllegalArgumentException(MessageUtil.getMessage("MISSING_PARAMETERS"));
         }
 
-        return repository.findBySkus(skus, template);
+        return repository.findBySkus(skus);
     }
 
     public Product findBySkus(String sku) {
@@ -66,18 +62,18 @@ public class ProductGateway {
     }
 
     public Page<Product> findAll(String title, Genre genre, boolean status, Pageable page) {
-        return null;
+        return repository.findAllBooks(title, genre, status, page);
     }
 
     public Page<Product> findAll(String name, String brand, String model, ElectronicType electronicType, boolean status, Pageable page) {
-        return null;
+        return repository.findAllElectronics(name, brand, model, electronicType, status, page);
     }
 
     public Page<Product> findAll(String name, String brand, String model, ProductSize size, boolean status, Pageable page) {
-        return null;
+        return repository.findAllClothes(name, brand, model, size, status, page);
     }
 
     public Page<Product> findAll(String name, String brand, String size, boolean status, Pageable page) {
-        return null;
+        return repository.findAllShoes(name, brand, size, status, page);
     }
 }

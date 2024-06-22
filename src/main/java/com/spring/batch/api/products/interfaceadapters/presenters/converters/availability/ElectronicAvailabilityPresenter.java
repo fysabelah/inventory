@@ -18,6 +18,7 @@ public class ElectronicAvailabilityPresenter implements PresenterAvailability<Pr
                 .length(entity.getDimensions().getLength())
                 .height(entity.getDimensions().getHeight())
                 .color(entity.getColor())
+                .reservedQuantity(entity.getReservedQuantity())
                 .build();
     }
 
@@ -35,6 +36,7 @@ public class ElectronicAvailabilityPresenter implements PresenterAvailability<Pr
                                 .height(dto.getHeight())
                                 .build()
                 )
+                .reservedQuantity(dto.getReservedQuantity())
                 .build();
     }
 }

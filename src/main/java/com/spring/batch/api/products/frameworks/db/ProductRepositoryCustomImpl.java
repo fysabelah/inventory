@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 
-public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
+class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     private final MongoTemplate template;
 

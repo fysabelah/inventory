@@ -19,7 +19,8 @@
           "length": 65,
           "height": 55
         },
-        "size": "38"
+        "size": "38",
+        "reservedQuantity": null
       },
       {
         "sku": null,
@@ -31,7 +32,8 @@
           "length": 70,
           "height": 55
         },
-        "size": "40"
+        "size": "40",
+        "reservedQuantity": null
       }
     ]
   }

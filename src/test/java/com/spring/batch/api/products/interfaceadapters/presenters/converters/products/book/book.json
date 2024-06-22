@@ -15,6 +15,7 @@
       "quantity": 5,
       "protection": 1,
       "updatedAt": null,
+      "reservedQuantity": null,
       "dimensions": {
         "width": 1.6,
         "length": 1.5,

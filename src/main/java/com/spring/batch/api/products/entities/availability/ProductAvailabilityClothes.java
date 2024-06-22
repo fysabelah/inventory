@@ -15,8 +15,9 @@ public class ProductAvailabilityClothes extends ProductAvailability {
     private ProductSize size;
 
     @Builder(builderMethodName = "clothesAvailability")
-    public ProductAvailabilityClothes(String sku, Integer quantity, Integer protection, LocalDateTime updatedAt, Dimensions dimensions, ProductSize size) {
-        super(sku, quantity, protection, updatedAt, dimensions);
+    public ProductAvailabilityClothes(String sku, Integer quantity, Integer protection, LocalDateTime updatedAt,
+                                      Dimensions dimensions, ProductSize size, Integer reservedQuantity) {
+        super(sku, quantity, protection, updatedAt, dimensions, reservedQuantity);
         this.size = size;
     }
 }

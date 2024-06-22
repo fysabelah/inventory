@@ -14,8 +14,9 @@ public class ProductAvailabilityElectronic extends ProductAvailability {
     private String color;
 
     @Builder(builderMethodName = "electronicAvailability")
-    public ProductAvailabilityElectronic(String sku, Integer quantity, Integer protection, LocalDateTime updatedAt, Dimensions dimensions, String color) {
-        super(sku, quantity, protection, updatedAt, dimensions);
+    public ProductAvailabilityElectronic(String sku, Integer quantity, Integer protection, LocalDateTime updatedAt,
+                                         Dimensions dimensions, String color, Integer reservedQuantity) {
+        super(sku, quantity, protection, updatedAt, dimensions, reservedQuantity);
         this.color = color;
     }
 }

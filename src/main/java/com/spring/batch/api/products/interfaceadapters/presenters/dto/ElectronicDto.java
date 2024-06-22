@@ -57,8 +57,9 @@ public class ElectronicDto extends CategoryInformation {
         private String color;
 
         @Builder(builderMethodName = "electronic")
-        public ElectronicAvailabilityDto(String sku, Integer quantity, Integer protection, BigDecimal width, BigDecimal length, BigDecimal height, String color) {
-            super(sku, quantity, protection, width, length, height);
+        public ElectronicAvailabilityDto(String sku, Integer quantity, Integer protection, BigDecimal width,
+                                         BigDecimal length, BigDecimal height, String color, Integer reservedQuantity) {
+            super(sku, quantity, protection, width, length, height, reservedQuantity);
             this.color = color;
         }
     }

@@ -45,8 +45,8 @@ public class ShoeDto extends CategoryInformation {
 
         @Builder(builderMethodName = "shoes")
         public ShoeAvailabilityDto(String sku, Integer quantity, Integer protection, BigDecimal width, BigDecimal length,
-                                   BigDecimal height, String size) {
-            super(sku, quantity, protection, width, length, height);
+                                   BigDecimal height, String size, Integer reservedQuantity) {
+            super(sku, quantity, protection, width, length, height, reservedQuantity);
             this.size = size;
         }
     }

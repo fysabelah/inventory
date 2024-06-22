@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     public ProductDto findBySku(String sku) {
-        Product product = gateway.findBySkus(sku);
+        Product product = gateway.findBySku(sku);
 
         return presenter.convert(product);
     }
@@ -69,7 +69,7 @@ public class ProductController {
     }
 
     public void changeQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection) throws BusinessException {
-        Product product = gateway.findBySkus(sku);
+        Product product = gateway.findBySku(sku);
 
         business.updateQuantity(quantity, updatedAt, protection, sku, product);
 

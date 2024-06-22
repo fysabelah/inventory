@@ -21,4 +21,6 @@ public class ProductAvailability {
     private LocalDateTime updatedAt;
 
     private Dimensions dimensions;
+
+    private Integer reservedQuantity;
 }

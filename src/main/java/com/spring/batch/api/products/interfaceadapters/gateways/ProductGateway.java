@@ -48,7 +48,7 @@ public class ProductGateway {
         return repository.findBySkus(skus);
     }
 
-    public Product findBySkus(String sku) {
+    public Product findBySku(String sku) {
         return findBySkuOptional(sku)
                 .orElseThrow(() -> new NoSuchElementException(MessageUtil.getMessage("NOT_FOUND")));
     }
@@ -75,5 +75,9 @@ public class ProductGateway {
 
     public Page<Product> findAll(String name, String brand, String size, boolean status, Pageable page) {
         return repository.findAllShoes(name, brand, size, status, page);
+    }
+
+    public void update(List<Product> products) {
+        repository.saveAll(products);
     }
 }

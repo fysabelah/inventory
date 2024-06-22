@@ -8,6 +8,7 @@ import com.spring.batch.api.products.utils.pagination.Pagination;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -77,11 +78,15 @@ public class ProductPresenter {
 
         paged.setPage(new Pagination(page.getNumber(), page.getSize(), page.getTotalPages()));
 
-        // TODO AQUI SERIA INTERSSANTE VALIDAR LISTA VAZIA
+        List<ProductDto> data = new ArrayList<>();
 
-        List<ProductDto> data = page.get().toList().stream()
-                .map(this::convert)
-                .toList();
+        List<Product> result = page.get().toList();
+
+        if (!result.isEmpty()) {
+            data = result.stream()
+                    .map(this::convert)
+                    .toList();
+        }
 
         paged.setData(data);
 

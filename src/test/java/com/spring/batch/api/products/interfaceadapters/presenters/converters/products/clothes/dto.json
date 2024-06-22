@@ -15,7 +15,8 @@
         "width": 1.6,
         "length": 1.5,
         "height": 1,
-        "size": "P"
+        "size": "P",
+        "reservedQuantity": null
       },
       {
         "quantity": 10,
@@ -23,7 +24,8 @@
         "width": 1.4,
         "length": 1.2,
         "height": 1,
-        "size": "PP"
+        "size": "PP",
+        "reservedQuantity": null
       }
     ]
   }

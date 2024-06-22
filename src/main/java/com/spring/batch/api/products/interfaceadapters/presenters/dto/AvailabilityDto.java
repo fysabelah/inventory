@@ -9,7 +9,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-@JsonIgnoreProperties(value = {"sku"}, allowGetters = true)
+@JsonIgnoreProperties(value = {"sku", "reservedQuantity"}, allowGetters = true)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -44,4 +44,7 @@ public class AvailabilityDto {
     @PositiveOrZero
     @NotNull
     private BigDecimal height;
+
+    @Schema(example = "23", description = "Quantidade reservada", accessMode = Schema.AccessMode.READ_ONLY)
+    private Integer reservedQuantity;
 }

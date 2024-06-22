@@ -16,7 +16,8 @@
         "width": 1.6,
         "length": 1.5,
         "height": 1,
-        "color": "yellow"
+        "color": "yellow",
+        "reservedQuantity": null
       },
       {
         "quantity": 10,
@@ -24,7 +25,8 @@
         "width": 1.4,
         "length": 1.2,
         "height": 1,
-        "color": "red"
+        "color": "red",
+        "reservedQuantity": null
       }
     ]
   }

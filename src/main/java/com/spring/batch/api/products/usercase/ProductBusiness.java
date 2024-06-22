@@ -7,7 +7,6 @@ import com.spring.batch.api.products.entities.availability.ProductAvailabilitySh
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Primary
 public class ProductBusiness {
 
     protected final Clock clock;
@@ -65,19 +63,20 @@ public class ProductBusiness {
         } else if (ProductCategory.ELECTRONICS.equals(product.getCategory())) {
             updateToInsert(product.getElectronic());
         } else if (ProductCategory.CLOTHES.equals(product.getCategory())) {
-            insertToUpdate(product.getClothes());
+            updateToInsert(product.getClothes());
         } else {
-            insertToUpdate(product.getShoes());
+            updateToInsert(product.getShoes());
         }
     }
 
-    private void insertToUpdate(Shoes shoes) {
+    private void updateToInsert(Shoes shoes) {
         String name = shoes.getName();
         String brand = shoes.getBrand();
         String color = shoes.getColor();
 
         shoes.getAvailability().forEach(productAvailabilityShoe -> {
             productAvailabilityShoe.setUpdatedAt(LocalDateTime.now(clock));
+            productAvailabilityShoe.setReservedQuantity(0);
             productAvailabilityShoe.setSku(
                     createSku(
                             List.of(name, brand, color, productAvailabilityShoe.getSize()),
@@ -90,6 +89,7 @@ public class ProductBusiness {
     private void updateToInsert(Book book) {
         book.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
         book.getAvailability().setSku(createSku(book.getIsbn(), ProductCategory.BOOKS));
+        book.getAvailability().setReservedQuantity(0);
     }
 
     private void updateToInsert(Electronic electronic) {
@@ -104,10 +104,11 @@ public class ProductBusiness {
             );
 
             availability.setUpdatedAt(LocalDateTime.now(clock));
+            availability.setReservedQuantity(0);
         });
     }
 
-    private void insertToUpdate(Clothes clothes) {
+    private void updateToInsert(Clothes clothes) {
         String model = clothes.getModel();
         String brand = clothes.getBrand();
         String color = clothes.getColor();
@@ -115,6 +116,7 @@ public class ProductBusiness {
         clothes.getAvailability().forEach(availability -> {
             availability.setUpdatedAt(LocalDateTime.now(clock));
             availability.setSku(createSku(List.of(model, brand, color, availability.getSize().name()), ProductCategory.CLOTHES));
+            availability.setReservedQuantity(0);
         });
     }
 

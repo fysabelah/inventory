@@ -18,6 +18,7 @@ public class ShoesAvailabilityPresenter implements PresenterAvailability<Product
                 .length(entity.getDimensions().getLength())
                 .height(entity.getDimensions().getHeight())
                 .size(entity.getSize())
+                .reservedQuantity(entity.getReservedQuantity())
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class ShoesAvailabilityPresenter implements PresenterAvailability<Product
                         .width(dto.getWidth())
                         .build())
                 .size(dto.getSize())
+                .reservedQuantity(dto.getReservedQuantity())
                 .build();
     }
 }

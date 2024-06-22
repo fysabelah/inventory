@@ -14,7 +14,8 @@
       "protection": 1,
       "width": 1.6,
       "length": 1.5,
-      "height": 1
+      "height": 1,
+      "reservedQuantity": null
     }
   }
 }

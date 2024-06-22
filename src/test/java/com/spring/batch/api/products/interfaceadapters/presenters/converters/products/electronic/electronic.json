@@ -21,7 +21,8 @@
           "length": 1.5,
           "height": 1
         },
-        "color": "yellow"
+        "color": "yellow",
+        "reservedQuantity": null
       },
       {
         "sku": null,
@@ -33,7 +34,8 @@
           "length": 1.2,
           "height": 1
         },
-        "color": "red"
+        "color": "red",
+        "reservedQuantity": null
       }
     ]
   }

@@ -3,6 +3,7 @@ package com.spring.batch.api.products.frameworks.db;
 import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.Genre;
+import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.enums.ProductSize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,7 +45,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     public Page<Product> findAllElectronics(String name, String brand, String model, ElectronicType electronicType, boolean status, Pageable page) {
         Query query = new Query();
 
-        query.addCriteria(Criteria.where("active").is(status));
+        setStatusAndCategory(query, status, ProductCategory.ELECTRONICS);
 
         if (model != null && !model.isBlank()) {
             query.addCriteria(Criteria.where("electronic.model").is(model));
@@ -71,11 +72,16 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return new PageImpl<>(list, page, count);
     }
 
+    private static void setStatusAndCategory(Query query, boolean status, ProductCategory electronics) {
+        query.addCriteria(Criteria.where("active").is(status));
+        query.addCriteria(Criteria.where("category").is(electronics));
+    }
+
     @Override
     public Page<Product> findAllClothes(String name, String brand, String model, ProductSize size, boolean status, Pageable page) {
         Query query = new Query();
 
-        query.addCriteria(Criteria.where("active").is(status));
+        setStatusAndCategory(query, status, ProductCategory.CLOTHES);
 
         if (name != null && !name.isBlank()) {
             query.addCriteria(Criteria.where("clothes.name").is(name));
@@ -107,7 +113,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     public Page<Product> findAllShoes(String name, String brand, String size, boolean status, Pageable page) {
         Query query = new Query();
 
-        query.addCriteria(Criteria.where("active").is(status));
+        setStatusAndCategory(query, status, ProductCategory.SHOES);
 
         if (name != null && !name.isBlank()) {
             query.addCriteria(Criteria.where("shoes.name").is(name));
@@ -135,7 +141,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     public Page<Product> findAllBooks(String title, Genre genre, boolean status, Pageable page) {
         Query query = new Query();
 
-        query.addCriteria(Criteria.where("active").is(status));
+        setStatusAndCategory(query, status, ProductCategory.BOOKS);
 
         if (title != null && !title.isBlank()) {
             query.addCriteria(Criteria.where("book.title").is(title));

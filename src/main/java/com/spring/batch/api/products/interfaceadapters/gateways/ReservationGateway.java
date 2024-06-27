@@ -3,6 +3,7 @@ package com.spring.batch.api.products.interfaceadapters.gateways;
 import com.spring.batch.api.products.entities.Reservation;
 import com.spring.batch.api.products.frameworks.db.ReservationRepository;
 import com.spring.batch.api.products.utils.MessageUtil;
+import com.spring.batch.api.products.utils.exceptions.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,16 @@ public class ReservationGateway {
         return repository.insert(reservations);
     }
 
+    public List<Reservation> findById(List<String> ids) throws BusinessException {
+        List<Reservation> reservations = repository.findAllById(ids);
+
+        if (reservations.isEmpty()) {
+            throw new BusinessException("RESERVATIONS_NOT_FOUND");
+        }
+
+        return reservations;
+    }
+
     public Reservation findById(String id) {
         return findByIdOptional(id)
                 .orElseThrow(() -> new NoSuchElementException(MessageUtil.getMessage("NOT_FOUND")));
@@ -37,5 +48,9 @@ public class ReservationGateway {
 
     public Reservation update(Reservation reservation) {
         return repository.save(reservation);
+    }
+
+    public List<Reservation> update(List<Reservation> reservations) {
+        return repository.saveAll(reservations);
     }
 }

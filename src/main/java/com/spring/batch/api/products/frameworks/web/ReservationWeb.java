@@ -33,7 +33,7 @@ public class ReservationWeb {
 
     @PutMapping(produces = "application/json", value = "/id/{id}/quantity/{quantity}")
     @Operation(summary = "Atualizar quantidade. Quando quantidade zero, a reserva será cancelada")
-    public ResponseEntity<ReservationDto> update(@PathVariable String id, @PathVariable @PositiveOrZero Integer quantity) {
+    public ResponseEntity<ReservationDto> update(@PathVariable String id, @PathVariable @PositiveOrZero Integer quantity) throws BusinessException {
         controller.update(id, quantity);
 
         return ResponseEntity.noContent().build();
@@ -41,13 +41,13 @@ public class ReservationWeb {
 
     @PutMapping(produces = "application/json", consumes = "application/json", value = "/confirm")
     @Operation(summary = "Finalizar reserva. Confirma a retirada do produto. Dado concorrência, pode retornar STOCKOUT")
-    public ResponseEntity<List<ReservationDto>> confirm(@Parameter(description = "Lista contendo os identificadores das reservas") @RequestBody @NotEmpty List<String> ids) {
+    public ResponseEntity<List<ReservationDto>> confirm(@Parameter(description = "Lista contendo os identificadores das reservas") @RequestBody @NotEmpty List<String> ids) throws BusinessException {
         return ResponseEntity.ok(controller.confirm(ids));
     }
 
     @PutMapping(produces = "application/json", consumes = "application/json", value = "/cancel")
     @Operation(summary = "Cancelar a reserva. Cancela a retirada do produto. Reserva será cancelada")
-    public ResponseEntity<List<ReservationDto>> cancel(@Parameter(description = "Lista contendo os identificadores das reservas") @RequestBody @NotEmpty List<String> ids) {
+    public ResponseEntity<List<ReservationDto>> cancel(@Parameter(description = "Lista contendo os identificadores das reservas") @RequestBody @NotEmpty List<String> ids) throws BusinessException {
         return ResponseEntity.ok(controller.cancel(ids));
     }
 }

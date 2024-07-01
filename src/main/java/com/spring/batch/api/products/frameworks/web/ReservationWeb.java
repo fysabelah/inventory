@@ -34,9 +34,7 @@ public class ReservationWeb {
     @PutMapping(produces = "application/json", value = "/id/{id}/quantity/{quantity}")
     @Operation(summary = "Atualizar quantidade. Quando quantidade zero, a reserva será cancelada")
     public ResponseEntity<ReservationDto> update(@PathVariable String id, @PathVariable @PositiveOrZero Integer quantity) throws BusinessException {
-        controller.update(id, quantity);
-
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(controller.update(id, quantity));
     }
 
     @PutMapping(produces = "application/json", consumes = "application/json", value = "/confirm")

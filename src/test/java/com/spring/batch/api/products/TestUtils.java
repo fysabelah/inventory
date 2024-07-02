@@ -10,6 +10,7 @@ public class TestUtils {
 
     public TestUtils() {
         this.objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
     }
 
     protected File getMock(String path) {

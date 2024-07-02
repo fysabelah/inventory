@@ -27,7 +27,7 @@ public class ProductBusiness {
 
     private String normalize(String value) {
         return value.replaceAll("\\s", "-")
-                .toLowerCase();
+                .toUpperCase();
     }
 
     protected String createSku(List<String> fields, ProductCategory category) {

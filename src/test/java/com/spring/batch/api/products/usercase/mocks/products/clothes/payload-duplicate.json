@@ -1,0 +1,54 @@
+{
+  "id": null,
+  "description": "It's a very interesting clothes",
+  "value": 69.66,
+  "active": true,
+  "category": "CLOTHES",
+  "clothes": {
+    "model": "SOME JEANS",
+    "brand": "JEANS BRAND",
+    "color": "yellow",
+    "name": "I'm a very pretty yellow jeans",
+    "availability": [
+      {
+        "sku": null,
+        "quantity": 10,
+        "protection": 1,
+        "updatedAt": null,
+        "dimensions": {
+          "width": 1.6,
+          "length": 1.5,
+          "height": 1
+        },
+        "size": "P",
+        "reservedQuantity": null
+      },
+      {
+        "sku": null,
+        "quantity": 10,
+        "protection": 2,
+        "updatedAt": null,
+        "dimensions": {
+          "width": 1.4,
+          "length": 1.2,
+          "height": 1
+        },
+        "size": "PP",
+        "reservedQuantity": null
+      },
+      {
+        "sku": null,
+        "quantity": 10,
+        "protection": 2,
+        "updatedAt": null,
+        "dimensions": {
+          "width": 1.4,
+          "length": 1.2,
+          "height": 1
+        },
+        "size": "PP",
+        "reservedQuantity": null
+      }
+    ]
+  }
+}

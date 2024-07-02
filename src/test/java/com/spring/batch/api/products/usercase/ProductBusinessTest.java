@@ -87,7 +87,17 @@ class ProductBusinessTest extends TestUtils {
     }
 
     @Test
-    void updateToInsertClothesDuplicate(){
+    void updateToInsertClothesDuplicate() throws JSONException, IOException {
+        updateToInsert("/clothes/payload-duplicate.json", "/clothes/clothes.json");
+    }
+
+    @Test
+    void updateToInsertElectronicDuplicate() {
+
+    }
+
+    @Test
+    void updateToInsertShoesDuplicate() {
 
     }
 

@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class ProductBusiness {
@@ -114,11 +112,20 @@ public class ProductBusiness {
         String brand = clothes.getBrand();
         String color = clothes.getColor();
 
-        clothes.getAvailability().forEach(availability -> {
-            availability.setUpdatedAt(LocalDateTime.now(clock));
-            availability.setSku(createSku(List.of(model, brand, color, availability.getSize().name()), ProductCategory.CLOTHES));
+        Map<String, ProductAvailabilityClothes> availabilityClothesMap = new HashMap<>();
+
+        for (ProductAvailabilityClothes availability : clothes.getAvailability()) {
+            LocalDateTime updatedAt = LocalDateTime.now(clock);
+            String sku = createSku(List.of(model, brand, color, availability.getSize().name()), ProductCategory.CLOTHES);
+
+            availability.setUpdatedAt(updatedAt);
+            availability.setSku(sku);
             availability.setReservedQuantity(0);
-        });
+
+            availabilityClothesMap.put(sku, availability);
+        }
+
+        clothes.setAvailability(new HashSet<>(availabilityClothesMap.values()));
     }
 
     private void updateBookQuantity(Integer quantity, LocalDateTime updatedAt, Integer protection, Book book) throws BusinessException {

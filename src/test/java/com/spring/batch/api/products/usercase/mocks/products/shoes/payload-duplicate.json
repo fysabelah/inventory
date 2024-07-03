@@ -1,0 +1,53 @@
+{
+  "id": null,
+  "description": "It's a very interesting shoe",
+  "value": 249,
+  "active": false,
+  "category": "SHOES",
+  "shoes": {
+    "brand": "SHOE BRAND",
+    "name": "Boots for pretty girls",
+    "color": "black",
+    "availability": [
+      {
+        "sku": null,
+        "quantity": 10,
+        "protection": 1,
+        "updatedAt": null,
+        "dimensions": {
+          "width": 30,
+          "length": 65,
+          "height": 55
+        },
+        "size": "38",
+        "reservedQuantity": null
+      },
+      {
+        "sku": null,
+        "quantity": 10,
+        "protection": 2,
+        "updatedAt": null,
+        "dimensions": {
+          "width": 33,
+          "length": 70,
+          "height": 55
+        },
+        "size": "40",
+        "reservedQuantity": null
+      },
+      {
+        "sku": null,
+        "quantity": 10,
+        "protection": 2,
+        "updatedAt": null,
+        "dimensions": {
+          "width": 33,
+          "length": 70,
+          "height": 55
+        },
+        "size": "40",
+        "reservedQuantity": null
+      }
+    ]
+  }
+}

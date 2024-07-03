@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.spring.batch.api.products.utils.enums.ProductCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +32,8 @@ public class ProductDto {
     private ProductCategory category;
 
     @Schema(example = "115.99", description = "Valor unitário do produto")
-    @Min(value = 0)
     @NotNull
+    @PositiveOrZero
     private BigDecimal value;
 
     @Schema(example = "true", description = "Status do produto")

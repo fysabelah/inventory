@@ -38,8 +38,8 @@ public class ProductBusiness {
         return category.name().concat("-").concat(String.join("-", normalized));
     }
 
-    protected String createSku(String field, ProductCategory category) {
-        return category.name().concat("-").concat(normalize(field));
+    protected String createSku(String field) {
+        return ProductCategory.BOOKS.name().concat("-").concat(normalize(field));
     }
 
     private void checkIfShouldUpdateQuantity(LocalDateTime lastUpdated, LocalDateTime updatedAt, Integer newQuantity, Integer protection) throws BusinessException {
@@ -73,21 +73,28 @@ public class ProductBusiness {
         String brand = shoes.getBrand();
         String color = shoes.getColor();
 
-        shoes.getAvailability().forEach(productAvailabilityShoe -> {
-            productAvailabilityShoe.setUpdatedAt(LocalDateTime.now(clock));
-            productAvailabilityShoe.setReservedQuantity(0);
-            productAvailabilityShoe.setSku(
-                    createSku(
-                            List.of(name, brand, color, productAvailabilityShoe.getSize()),
-                            ProductCategory.SHOES
-                    )
+        Map<String, ProductAvailabilityShoe> availabilityClothesMap = new HashMap<>();
+
+        for (ProductAvailabilityShoe availability : shoes.getAvailability()) {
+            LocalDateTime updatedAt = LocalDateTime.now(clock);
+            String sku = createSku(
+                    List.of(name, brand, color, availability.getSize()),
+                    ProductCategory.SHOES
             );
-        });
+
+            availability.setUpdatedAt(updatedAt);
+            availability.setSku(sku);
+            availability.setReservedQuantity(0);
+
+            availabilityClothesMap.put(sku, availability);
+        }
+
+        shoes.setAvailability(new HashSet<>(availabilityClothesMap.values()));
     }
 
     private void updateToInsert(Book book) {
         book.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
-        book.getAvailability().setSku(createSku(book.getIsbn(), ProductCategory.BOOKS));
+        book.getAvailability().setSku(createSku(book.getIsbn()));
         book.getAvailability().setReservedQuantity(0);
     }
 
@@ -96,15 +103,21 @@ public class ProductBusiness {
         String brand = electronic.getBrand();
         ElectronicType type = electronic.getType();
 
-        electronic.getAvailability().forEach(availability -> {
-            availability.setSku(
-                    createSku(List.of(model, brand, type.name(), availability.getColor()),
-                            ProductCategory.ELECTRONICS)
-            );
+        Map<String, ProductAvailabilityElectronic> availabilityClothesMap = new HashMap<>();
 
-            availability.setUpdatedAt(LocalDateTime.now(clock));
+        for (ProductAvailabilityElectronic availability : electronic.getAvailability()) {
+            LocalDateTime updatedAt = LocalDateTime.now(clock);
+            String sku = createSku(List.of(model, brand, type.name(), availability.getColor()),
+                    ProductCategory.ELECTRONICS);
+
+            availability.setUpdatedAt(updatedAt);
+            availability.setSku(sku);
             availability.setReservedQuantity(0);
-        });
+
+            availabilityClothesMap.put(sku, availability);
+        }
+
+        electronic.setAvailability(new HashSet<>(availabilityClothesMap.values()));
     }
 
     private void updateToInsert(Clothes clothes) {
@@ -160,6 +173,8 @@ public class ProductBusiness {
 
         ProductAvailabilityShoe toUpdate = availability.get();
 
+        checkIfShouldUpdateQuantity(toUpdate.getUpdatedAt(), updatedAt, quantity, protection);
+
         shoes.getAvailability().remove(toUpdate);
 
         toUpdate.setQuantity(quantity);
@@ -180,6 +195,8 @@ public class ProductBusiness {
         }
 
         ProductAvailabilityClothes toUpdate = availability.get();
+
+        checkIfShouldUpdateQuantity(toUpdate.getUpdatedAt(), updatedAt, quantity, protection);
 
         clothes.getAvailability().remove(toUpdate);
 
@@ -202,6 +219,8 @@ public class ProductBusiness {
 
         ProductAvailabilityElectronic toUpdate = availability.get();
 
+        checkIfShouldUpdateQuantity(toUpdate.getUpdatedAt(), updatedAt, quantity, protection);
+
         electronic.getAvailability().remove(toUpdate);
 
         toUpdate.setQuantity(quantity);
@@ -212,7 +231,7 @@ public class ProductBusiness {
     }
 
     public void checkIfUpdateValue(Product product, BigDecimal value) throws BusinessException {
-        if (BigDecimal.ZERO.compareTo(value) <= 0) {
+        if (BigDecimal.ZERO.compareTo(value) > 0) {
             throw new BusinessException("VALUE_CANT_BE_NEGATIVE");
         }
 

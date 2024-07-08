@@ -1,0 +1,151 @@
+[
+  {
+    "id": "book-id",
+    "description": "It's a very interesting book",
+    "value": 130.69,
+    "category": "BOOKS",
+    "active": true,
+    "book": {
+      "isbn": "78598-9898",
+      "title": "Interesting Book 2",
+      "pages": 231,
+      "genre": "POETRY",
+      "publisher": "I'm the publisher",
+      "availability": {
+        "sku": "BOOKS-78598-9898",
+        "quantity": 5,
+        "protection": 1,
+        "updatedAt": "2024-07-01T08:40:00Z",
+        "reservedQuantity": 2,
+        "dimensions": {
+          "width": 1.6,
+          "length": 1.5,
+          "height": 1
+        }
+      }
+    }
+  },
+  {
+    "id": "clothes-id",
+    "description": "It's a very interesting clothes",
+    "value": 69.66,
+    "active": true,
+    "category": "CLOTHES",
+    "clothes": {
+      "model": "SOME JEANS",
+      "brand": "JEANS BRAND",
+      "color": "yellow",
+      "name": "I'm a very pretty yellow jeans",
+      "availability": [
+        {
+          "sku": "CLOTHES-SOME-JEANS-JEANS-BRAND-YELLOW-P",
+          "quantity": 3,
+          "protection": 1,
+          "updatedAt": "2024-07-01T08:40:00Z",
+          "dimensions": {
+            "width": 1.6,
+            "length": 1.5,
+            "height": 1
+          },
+          "size": "P",
+          "reservedQuantity": 0
+        },
+        {
+          "sku": "CLOTHES-SOME-JEANS-JEANS-BRAND-YELLOW-PP",
+          "quantity": 10,
+          "protection": 2,
+          "updatedAt": "2024-07-01T08:40:00Z",
+          "dimensions": {
+            "width": 1.4,
+            "length": 1.2,
+            "height": 1
+          },
+          "size": "PP",
+          "reservedQuantity": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "electronic-id",
+    "description": "It's a very interesting electronic",
+    "value": 2049.98,
+    "active": false,
+    "category": "ELECTRONICS",
+    "electronic": {
+      "model": "SOME TV",
+      "brand": "TV BRAND",
+      "name": "I'm a very pretty TV",
+      "features": "Very good tv with very good features!! Watch it then will you see it",
+      "type": "TV",
+      "availability": [
+        {
+          "sku": "ELECTRONICS-SOME-TV-TV-BRAND-TV-YELLOW",
+          "quantity": 10,
+          "protection": 1,
+          "updatedAt": "2024-07-01T08:40:00Z",
+          "dimensions": {
+            "width": 1.6,
+            "length": 1.5,
+            "height": 1
+          },
+          "color": "yellow",
+          "reservedQuantity": 5
+        },
+        {
+          "sku": "ELECTRONICS-SOME-TV-TV-BRAND-TV-RED",
+          "quantity": 6,
+          "protection": 2,
+          "updatedAt": "2024-07-01T08:40:00Z",
+          "dimensions": {
+            "width": 1.4,
+            "length": 1.2,
+            "height": 1
+          },
+          "color": "red",
+          "reservedQuantity": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "shoe-id",
+    "description": "It's a very interesting shoe",
+    "value": 249,
+    "active": false,
+    "category": "SHOES",
+    "shoes": {
+      "brand": "SHOE BRAND",
+      "name": "Boots for pretty girls",
+      "color": "black",
+      "availability": [
+        {
+          "sku": "SHOES-BOOTS-FOR-PRETTY-GIRLS-SHOE-BRAND-BLACK-38",
+          "quantity": 10,
+          "protection": 1,
+          "updatedAt": "2024-07-01T08:40:00Z",
+          "dimensions": {
+            "width": 30,
+            "length": 65,
+            "height": 55
+          },
+          "size": "38",
+          "reservedQuantity": 6
+        },
+        {
+          "sku": "SHOES-BOOTS-FOR-PRETTY-GIRLS-SHOE-BRAND-BLACK-40",
+          "quantity": 10,
+          "protection": 2,
+          "updatedAt": "2024-07-01T08:40:00Z",
+          "dimensions": {
+            "width": 33,
+            "length": 70,
+            "height": 55
+          },
+          "size": "40",
+          "reservedQuantity": 0
+        }
+      ]
+    }
+  }
+]

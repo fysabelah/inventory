@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,5 +68,21 @@ public class Product {
         }
 
         return book.getAvailability().getSku() != null ? List.of(book.getAvailability().getSku()) : Collections.emptyList();
+    }
+
+    public List<ProductAvailability> getAvailabilities() {
+        if (ProductCategory.SHOES.equals(this.category)) {
+            return new ArrayList<>(shoes.getAvailability());
+        }
+
+        if (ProductCategory.ELECTRONICS.equals(this.category)) {
+            return new ArrayList<>(electronic.getAvailability());
+        }
+
+        if (ProductCategory.CLOTHES.equals(this.category)) {
+            return new ArrayList<>(clothes.getAvailability());
+        }
+
+        return List.of(book.getAvailability());
     }
 }

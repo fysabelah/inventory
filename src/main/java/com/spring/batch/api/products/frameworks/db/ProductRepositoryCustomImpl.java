@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
 
@@ -158,5 +159,24 @@ class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         List<Product> list = template.find(query, Product.class);
 
         return new PageImpl<>(list, page, count);
+    }
+
+    @Override
+    public void updateReservedQuantityPerSku(ProductCategory category, Integer reservedQuantity, String sku) {
+        String baseField;
+
+        if (ProductCategory.CLOTHES.equals(category)) {
+            baseField = "clothes";
+        } else if (ProductCategory.BOOKS.equals(category)) {
+            baseField = "book";
+        } else if (ProductCategory.ELECTRONICS.equals(category)) {
+            baseField = "electronic";
+        } else {
+            baseField = "shoes";
+        }
+
+        Query query = new Query(Criteria.where(baseField + ".availability.sku").is(sku));
+        Update update = new Update().set(baseField + "availability.$.reservedQuantity", reservedQuantity);
+        template.updateFirst(query, update, Product.class);
     }
 }

@@ -5,6 +5,7 @@ import com.spring.batch.api.products.frameworks.db.ProductRepository;
 import com.spring.batch.api.products.utils.MessageUtil;
 import com.spring.batch.api.products.utils.enums.ElectronicType;
 import com.spring.batch.api.products.utils.enums.Genre;
+import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.enums.ProductSize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,5 +80,9 @@ public class ProductGateway {
 
     public void update(List<Product> products) {
         repository.saveAll(products);
+    }
+
+    public void updateReservedQuantityPerSku(ProductCategory category, Integer reservedQuantity, String sku) {
+        repository.updateReservedQuantityPerSku(category, reservedQuantity, sku);
     }
 }

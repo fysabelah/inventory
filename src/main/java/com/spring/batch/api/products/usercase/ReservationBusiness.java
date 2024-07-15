@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class ReservationBusiness {
@@ -97,15 +100,16 @@ public class ReservationBusiness {
         }
     }
 
-    public void updateReservationQuantity(Reservation reservation, Product product, Integer quantity) throws BusinessException {
+    // As operações de stream utilizadas não são thread safe.
+    public ProductAvailability updateReservationQuantity(Reservation reservation, Product product, Integer quantity) throws BusinessException {
         if (quantity == 0) {
-            cancelReservation(reservation, product);
-        } else {
-            changeReservedQuantity(reservation, product, quantity);
+            return cancelReservation(reservation, product);
         }
+
+        return changeReservedQuantity(reservation, product, quantity);
     }
 
-    private void changeReservedQuantity(Reservation reservation, Product product, Integer quantity) throws BusinessException {
+    private ProductAvailability changeReservedQuantity(Reservation reservation, Product product, Integer quantity) throws BusinessException {
         if (Objects.equals(reservation.getQuantity(), quantity)) {
             throw new BusinessException("SAME_QUANTITY_FOR_RESERVATION");
         }
@@ -114,176 +118,87 @@ public class ReservationBusiness {
             throw new BusinessException("RESERVATION_CANT_BE_UPDATED_ON_STATUS");
         }
 
-        Reservation toCheck = new Reservation();
-        toCheck.setSku(reservation.getSku());
-        toCheck.setQuantity(Math.abs(reservation.getQuantity() - quantity));
+        ProductAvailability availability = product.getAvailabilities()
+                .stream()
+                .filter(productAvailability -> productAvailability.getSku().equals(reservation.getSku()))
+                .findFirst()
+                .get();
 
-        verifyCategoryAndCreateReservation(reservation, product);
+        availability.setReservedQuantity(Math.abs(availability.getReservedQuantity() - reservation.getQuantity()));
+
+        reservation.setQuantity(quantity);
+
+        verifyIfCanChangeQuantity(reservation, availability);
 
         if (ReservationStatus.STOCKOUT.equals(reservation.getStatus())) {
             throw new BusinessException("RESERVATION_QUANTITY_UNAVAILABLE");
         }
 
-        reservation.setQuantity(quantity);
+        return availability;
     }
 
-    private void cancelReservation(Reservation reservation, Product product) {
+    private void verifyIfCanChangeQuantity(Reservation reservation, ProductAvailability availability) {
+        int total = availability.getQuantity() - availability.getReservedQuantity() - availability.getProtection();
+
+        if (total >= reservation.getQuantity()) {
+            reservation.setStatus(ReservationStatus.READY);
+            availability.setReservedQuantity(availability.getReservedQuantity() + reservation.getQuantity());
+        } else {
+            reservation.setStatus(ReservationStatus.STOCKOUT);
+        }
+    }
+
+    private ProductAvailability cancelReservation(Reservation reservation, Product product) {
         reservation.setStatus(ReservationStatus.CANCELED);
 
-        if (ProductCategory.BOOKS.equals(product.getCategory())) {
-            product.getBook().getAvailability().setReservedQuantity(
-                    product.getBook().getAvailability().getReservedQuantity() - reservation.getQuantity()
-            );
-        } else if (ProductCategory.ELECTRONICS.equals(product.getCategory())) {
-            cancelElectronicReservation(product.getElectronic().getAvailability(), reservation.getQuantity(), reservation.getSku());
-        } else if (ProductCategory.CLOTHES.equals(product.getCategory())) {
-            cancelClothesReservation(product.getClothes().getAvailability(), reservation.getQuantity(), reservation.getSku());
-        } else {
-            cancelShoesReservation(product.getShoes().getAvailability(), reservation.getQuantity(), reservation.getSku());
-        }
+        ProductAvailability productAvailability = product.getAvailabilities()
+                .stream()
+                .filter(availability -> availability.getSku().equals(reservation.getSku()))
+                .findAny()
+                .get();
+
+        productAvailability.setReservedQuantity(Math.abs(productAvailability.getReservedQuantity() - reservation.getQuantity()));
+
+        return productAvailability;
     }
 
-    private void cancelShoesReservation(Set<ProductAvailabilityShoe> availabilities, Integer quantity, String sku) {
-        for (ProductAvailabilityShoe availability : availabilities) {
-            if (availability.getSku().equals(sku)) {
-                availability.setReservedQuantity(availability.getReservedQuantity() - quantity);
-                break;
-            }
-        }
-    }
+    private Optional<ProductAvailability> findAvailabilityBySku(List<Product> products, String sku) {
+        ProductCategory category = ProductCategory.valueOf(sku.split("-")[0]);
 
-    private void cancelClothesReservation(Set<ProductAvailabilityClothes> availabilities, Integer quantity, String sku) {
-        for (ProductAvailabilityClothes availability : availabilities) {
-            if (availability.getSku().equals(sku)) {
-                availability.setReservedQuantity(availability.getReservedQuantity() - quantity);
-                break;
-            }
-        }
-    }
-
-    private void cancelElectronicReservation(Set<ProductAvailabilityElectronic> availabilities, Integer quantity, String sku) {
-        for (ProductAvailabilityElectronic availability : availabilities) {
-            if (availability.getSku().equals(sku)) {
-                availability.setReservedQuantity(availability.getReservedQuantity() - quantity);
-                break;
-            }
-        }
+        return products.stream()
+                .filter(product -> product.getCategory().equals(category))
+                .flatMap(product -> product.getAvailabilities().stream())
+                .filter(availability -> availability.getSku().equals(sku))
+                .findFirst();
     }
 
     public void confirmReservation(List<Reservation> reservations, List<Product> products) {
-        Map<String, Reservation> reservationMap = new HashMap<>();
+        reservations.forEach(reservation -> {
+            if (ReservationStatus.READY.equals(reservation.getStatus())) {
+                ProductAvailability availability = findAvailabilityBySku(products, reservation.getSku()).get();
 
-        reservations.forEach(reservation -> reservationMap.put(reservation.getSku(), reservation));
+                if (availability.getQuantity() >= reservation.getQuantity()) {
+                    availability.setQuantity(Math.max(availability.getQuantity() - reservation.getQuantity(), 0));
 
-        products.forEach(product -> {
-            if (ProductCategory.BOOKS.equals(product.getCategory())) {
-                checkAndConfirmBookReservation(product.getBook().getAvailability(), reservationMap);
-            } else if (ProductCategory.ELECTRONICS.equals(product.getCategory())) {
-                checkAndConfirmElectronicReservation(product.getElectronic().getAvailability(), reservationMap);
-            } else if (ProductCategory.CLOTHES.equals(product.getCategory())) {
-                checkAndConfirmClothesReservation(product.getClothes().getAvailability(), reservationMap);
-            } else {
-                checkAndConfirmShoesReservation(product.getShoes().getAvailability(), reservationMap);
+                    reservation.setStatus(ReservationStatus.FINISHED);
+                } else {
+                    reservation.setStatus(ReservationStatus.STOCKOUT);
+                }
+
+                availability.setReservedQuantity(Math.max(availability.getReservedQuantity() - reservation.getQuantity(), 0));
             }
         });
-    }
-
-    private void checkAndConfirmShoesReservation(Set<ProductAvailabilityShoe> availabilities, Map<String, Reservation> reservationMap) {
-        for (ProductAvailabilityShoe availability : availabilities) {
-            if (reservationMap.containsKey(availability.getSku())) {
-                setReservationToFinished(reservationMap, availability);
-            }
-        }
-    }
-
-    private void checkAndConfirmClothesReservation(Set<ProductAvailabilityClothes> availabilities, Map<String, Reservation> reservationMap) {
-        for (ProductAvailabilityClothes availability : availabilities) {
-            if (reservationMap.containsKey(availability.getSku())) {
-                setReservationToFinished(reservationMap, availability);
-            }
-        }
-    }
-
-    private void checkAndConfirmElectronicReservation(Set<ProductAvailabilityElectronic> availabilities, Map<String, Reservation> reservationMap) {
-        for (ProductAvailabilityElectronic availability : availabilities) {
-            if (reservationMap.containsKey(availability.getSku())) {
-                setReservationToFinished(reservationMap, availability);
-            }
-        }
-    }
-
-    private void checkAndConfirmBookReservation(ProductAvailability availability, Map<String, Reservation> reservationMap) {
-        if (reservationMap.containsKey(availability.getSku())) {
-            setReservationToFinished(reservationMap, availability);
-        }
     }
 
     public void cancelReservation(List<Reservation> reservations, List<Product> products) {
-        Map<String, Reservation> reservationMap = new HashMap<>();
+        reservations.forEach(reservation -> {
+            ProductAvailability availability = findAvailabilityBySku(products, reservation.getSku()).get();
 
-        reservations.forEach(reservation -> reservationMap.put(reservation.getSku(), reservation));
-
-        products.forEach(product -> {
-            if (ProductCategory.BOOKS.equals(product.getCategory())) {
-                checkAndCancelBookReservation(product.getBook().getAvailability(), reservationMap);
-            } else if (ProductCategory.ELECTRONICS.equals(product.getCategory())) {
-                checkAndCancelElectronicReservation(product.getElectronic().getAvailability(), reservationMap);
-            } else if (ProductCategory.CLOTHES.equals(product.getCategory())) {
-                checkAndCancelClothesReservation(product.getClothes().getAvailability(), reservationMap);
-            } else {
-                checkAndCancelShoesReservation(product.getShoes().getAvailability(), reservationMap);
+            if (ReservationStatus.READY.equals(reservation.getStatus())) {
+                availability.setReservedQuantity(Math.max(availability.getReservedQuantity() - reservation.getQuantity(), 0));
             }
+
+            reservation.setStatus(ReservationStatus.CANCELED);
         });
-    }
-
-    private void checkAndCancelShoesReservation(Set<ProductAvailabilityShoe> availabilities, Map<String, Reservation> reservationMap) {
-        for (ProductAvailabilityShoe availability : availabilities) {
-            if (reservationMap.containsKey(availability.getSku())) {
-                setReservationToCanceled(reservationMap, availability);
-            }
-        }
-    }
-
-    private void checkAndCancelClothesReservation(Set<ProductAvailabilityClothes> availabilities, Map<String, Reservation> reservationMap) {
-        for (ProductAvailabilityClothes availability : availabilities) {
-            if (reservationMap.containsKey(availability.getSku())) {
-                setReservationToCanceled(reservationMap, availability);
-            }
-        }
-    }
-
-    private void checkAndCancelElectronicReservation(Set<ProductAvailabilityElectronic> availabilities, Map<String, Reservation> reservationMap) {
-        for (ProductAvailabilityElectronic availability : availabilities) {
-            if (reservationMap.containsKey(availability.getSku())) {
-                setReservationToCanceled(reservationMap, availability);
-            }
-        }
-    }
-
-    private static void setReservationToFinished(Map<String, Reservation> reservationMap, ProductAvailability availability) {
-        Integer reservedQuantity = reservationMap.get(availability.getSku()).getQuantity();
-
-        if (availability.getQuantity() >= reservedQuantity) {
-            reservationMap.get(availability.getSku()).setStatus(ReservationStatus.FINISHED);
-
-            availability.setQuantity(availability.getQuantity() - reservedQuantity);
-        } else {
-            reservationMap.get(availability.getSku()).setStatus(ReservationStatus.STOCKOUT);
-        }
-
-        availability.setReservedQuantity(availability.getReservedQuantity() - reservedQuantity);
-    }
-
-    private static void setReservationToCanceled(Map<String, Reservation> reservationMap, ProductAvailability availability) {
-        reservationMap.get(availability.getSku()).setStatus(ReservationStatus.CANCELED);
-
-        availability.setReservedQuantity(
-                availability.getReservedQuantity() - reservationMap.get(availability.getSku()).getQuantity());
-    }
-
-    private void checkAndCancelBookReservation(ProductAvailability availability, Map<String, Reservation> reservationMap) {
-        if (reservationMap.containsKey(availability.getSku())) {
-            setReservationToCanceled(reservationMap, availability);
-        }
     }
 }

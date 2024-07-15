@@ -2,6 +2,7 @@ package com.spring.batch.api.products.interfaceadapters.controllers;
 
 import com.spring.batch.api.products.entities.Product;
 import com.spring.batch.api.products.entities.Reservation;
+import com.spring.batch.api.products.entities.availability.ProductAvailability;
 import com.spring.batch.api.products.interfaceadapters.gateways.ProductGateway;
 import com.spring.batch.api.products.interfaceadapters.gateways.ReservationGateway;
 import com.spring.batch.api.products.interfaceadapters.presenters.converters.ReservationPresenter;
@@ -107,11 +108,11 @@ public class ReservationController {
 
         Product product = productGateway.findBySku(reservation.getSku());
 
-        business.updateReservationQuantity(reservation, product, quantity);
+        ProductAvailability productAvailability = business.updateReservationQuantity(reservation, product, quantity);
 
         reservation = gateway.update(reservation);
 
-        productGateway.update(product);
+        productGateway.updateReservedQuantityPerSku(product.getCategory(), productAvailability.getReservedQuantity(), productAvailability.getSku());
 
         return presenter.convert(reservation);
     }

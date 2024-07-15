@@ -1,0 +1,51 @@
+[
+  {
+    "id": null,
+    "sku": "BOOKS-78598-9898",
+    "quantity": 2,
+    "status": "READY",
+    "date": "2024-07-01T08:40:00Z"
+  },
+  {
+    "id": null,
+    "sku": "CLOTHES-SOME-JEANS-JEANS-BRAND-YELLOW-P",
+    "quantity": 7,
+    "status": "STOCKOUT",
+    "date": "2024-07-01T08:40:00Z"
+  },
+  {
+    "id": null,
+    "sku": "CLOTHES-SOME-JEANS-JEANS-BRAND-YELLOW-PP",
+    "quantity": 3,
+    "status": "READY",
+    "date": "2024-07-01T08:40:00Z"
+  },
+  {
+    "id": null,
+    "sku": "ELECTRONICS-SOME-TV-TV-BRAND-TV-YELLOW",
+    "quantity": 4,
+    "status": "READY",
+    "date": "2024-07-01T08:40:00Z"
+  },
+  {
+    "id": null,
+    "sku": "ELECTRONICS-SOME-TV-TV-BRAND-TV-RED",
+    "quantity": 5,
+    "status": "READY",
+    "date": "2024-07-01T08:40:00Z"
+  },
+  {
+    "id": null,
+    "sku": "SHOES-BOOTS-FOR-PRETTY-GIRLS-SHOE-BRAND-BLACK-38",
+    "quantity": 11,
+    "status": "STOCKOUT",
+    "date": "2024-07-01T08:40:00Z"
+  },
+  {
+    "id": null,
+    "sku": "SHOES-BOOTS-FOR-PRETTY-GIRLS-SHOE-BRAND-BLACK-40",
+    "quantity": 3,
+    "status": "READY",
+    "date": "2024-07-01T08:40:00Z"
+  }
+]

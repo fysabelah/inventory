@@ -1,6 +1,8 @@
 package com.spring.batch.api.products;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.File;
 import java.time.Clock;
@@ -25,5 +27,12 @@ public class TestUtils {
 
     protected File getMock(String path) {
         return new File(path);
+    }
+
+    protected void assertJsonEquals(String expected, String actual) throws JSONException {
+        JSONAssert.assertEquals(
+                expected,
+                actual,
+                false);
     }
 }

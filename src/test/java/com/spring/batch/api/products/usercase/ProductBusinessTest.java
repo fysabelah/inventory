@@ -11,7 +11,6 @@ import com.spring.batch.api.products.utils.enums.ProductCategory;
 import com.spring.batch.api.products.utils.exceptions.BusinessException;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -60,10 +59,10 @@ class ProductBusinessTest extends TestUtils {
 
         Product expected = objectMapper.readValue(getMock(BASE_PATH + pathExpectedFile), Product.class);
 
-        JSONAssert.assertEquals(
+        super.assertJsonEquals(
                 objectMapper.writeValueAsString(expected),
-                objectMapper.writeValueAsString(product),
-                false);
+                objectMapper.writeValueAsString(product)
+        );
     }
 
     @Test

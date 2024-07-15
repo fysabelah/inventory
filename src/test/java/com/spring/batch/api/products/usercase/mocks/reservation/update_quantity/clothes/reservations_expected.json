@@ -1,0 +1,9 @@
+[
+  {
+    "id": "reserva-clothes-id-1",
+    "sku": "CLOTHES-SOME-JEANS-JEANS-BRAND-YELLOW-P",
+    "quantity": 1,
+    "status": "CANCELED",
+    "date": "2024-07-01T08:40:00Z"
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "reserva-book-id",
+    "sku": "BOOKS-78598-9898",
+    "quantity": 2,
+    "status": "READY",
+    "date": "2024-07-01T08:40:00Z"
+  }
+]

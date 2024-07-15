@@ -1,6 +1,7 @@
 package com.spring.batch.api.products.usercase;
 
 import com.spring.batch.api.products.entities.*;
+import com.spring.batch.api.products.entities.availability.ProductAvailability;
 import com.spring.batch.api.products.entities.availability.ProductAvailabilityClothes;
 import com.spring.batch.api.products.entities.availability.ProductAvailabilityElectronic;
 import com.spring.batch.api.products.entities.availability.ProductAvailabilityShoe;
@@ -76,15 +77,12 @@ public class ProductBusiness {
         Map<String, ProductAvailabilityShoe> availabilityClothesMap = new HashMap<>();
 
         for (ProductAvailabilityShoe availability : shoes.getAvailability()) {
-            LocalDateTime updatedAt = LocalDateTime.now(clock);
             String sku = createSku(
                     List.of(name, brand, color, availability.getSize()),
                     ProductCategory.SHOES
             );
 
-            availability.setUpdatedAt(updatedAt);
-            availability.setSku(sku);
-            availability.setReservedQuantity(0);
+            updateBaseAvailabilityInformation(sku, availability);
 
             availabilityClothesMap.put(sku, availability);
         }
@@ -92,10 +90,14 @@ public class ProductBusiness {
         shoes.setAvailability(new HashSet<>(availabilityClothesMap.values()));
     }
 
+    private void updateBaseAvailabilityInformation(String sku, ProductAvailability availability) {
+        availability.setUpdatedAt(LocalDateTime.now(clock));
+        availability.setSku(sku);
+        availability.setReservedQuantity(0);
+    }
+
     private void updateToInsert(Book book) {
-        book.getAvailability().setUpdatedAt(LocalDateTime.now(clock));
-        book.getAvailability().setSku(createSku(book.getIsbn()));
-        book.getAvailability().setReservedQuantity(0);
+        updateBaseAvailabilityInformation(createSku(book.getIsbn()), book.getAvailability());
     }
 
     private void updateToInsert(Electronic electronic) {
@@ -106,13 +108,10 @@ public class ProductBusiness {
         Map<String, ProductAvailabilityElectronic> availabilityClothesMap = new HashMap<>();
 
         for (ProductAvailabilityElectronic availability : electronic.getAvailability()) {
-            LocalDateTime updatedAt = LocalDateTime.now(clock);
             String sku = createSku(List.of(model, brand, type.name(), availability.getColor()),
                     ProductCategory.ELECTRONICS);
 
-            availability.setUpdatedAt(updatedAt);
-            availability.setSku(sku);
-            availability.setReservedQuantity(0);
+            updateBaseAvailabilityInformation(sku, availability);
 
             availabilityClothesMap.put(sku, availability);
         }
@@ -128,12 +127,9 @@ public class ProductBusiness {
         Map<String, ProductAvailabilityClothes> availabilityClothesMap = new HashMap<>();
 
         for (ProductAvailabilityClothes availability : clothes.getAvailability()) {
-            LocalDateTime updatedAt = LocalDateTime.now(clock);
             String sku = createSku(List.of(model, brand, color, availability.getSize().name()), ProductCategory.CLOTHES);
 
-            availability.setUpdatedAt(updatedAt);
-            availability.setSku(sku);
-            availability.setReservedQuantity(0);
+            updateBaseAvailabilityInformation(sku, availability);
 
             availabilityClothesMap.put(sku, availability);
         }
@@ -141,93 +137,23 @@ public class ProductBusiness {
         clothes.setAvailability(new HashSet<>(availabilityClothesMap.values()));
     }
 
-    private void updateBookQuantity(Integer quantity, LocalDateTime updatedAt, Integer protection, Book book) throws BusinessException {
-        checkIfShouldUpdateQuantity(book.getAvailability().getUpdatedAt(), updatedAt, quantity, protection);
-
-        book.getAvailability().setQuantity(quantity);
-        book.getAvailability().setProtection(protection);
-        book.getAvailability().setUpdatedAt(updatedAt);
-    }
-
     public void updateQuantity(Integer quantity, LocalDateTime updatedAt, Integer protection, String sku, Product product) throws BusinessException {
-        if (ProductCategory.BOOKS.equals(product.getCategory())) {
-            updateBookQuantity(quantity, updatedAt, protection, product.getBook());
-        } else if (ProductCategory.ELECTRONICS.equals(product.getCategory())) {
-            updateElectronicQuantity(sku, quantity, updatedAt, protection, product.getElectronic());
-        } else if (ProductCategory.CLOTHES.equals(product.getCategory())) {
-            updateClothesQuantity(sku, quantity, updatedAt, protection, product.getClothes());
-        } else if (ProductCategory.SHOES.equals(product.getCategory())) {
-            updateShoesQuantity(sku, quantity, updatedAt, protection, product.getShoes());
-        }
-    }
-
-    private void updateShoesQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection, Shoes shoes) throws BusinessException {
-        Optional<ProductAvailabilityShoe> availability = shoes.getAvailability()
+        Optional<ProductAvailability> availability = product.getAvailabilities()
                 .stream()
-                .filter(productAvailabilityShoe -> productAvailabilityShoe.getSku().equals(sku))
-                .findAny();
+                .filter(productAvailability -> productAvailability.getSku().equals(sku))
+                .findFirst();
 
         if (availability.isEmpty()) {
             throw new BusinessException("NOT_FOUND");
         }
 
-        ProductAvailabilityShoe toUpdate = availability.get();
+        ProductAvailability toUpdate = availability.get();
 
         checkIfShouldUpdateQuantity(toUpdate.getUpdatedAt(), updatedAt, quantity, protection);
-
-        shoes.getAvailability().remove(toUpdate);
 
         toUpdate.setQuantity(quantity);
         toUpdate.setUpdatedAt(updatedAt);
         toUpdate.setProtection(protection);
-
-        shoes.getAvailability().add(toUpdate);
-    }
-
-    private void updateClothesQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection, Clothes clothes) throws BusinessException {
-        Optional<ProductAvailabilityClothes> availability = clothes.getAvailability()
-                .stream()
-                .filter(productAvailabilityClothes -> productAvailabilityClothes.getSku().equals(sku))
-                .findAny();
-
-        if (availability.isEmpty()) {
-            throw new BusinessException("NOT_FOUND");
-        }
-
-        ProductAvailabilityClothes toUpdate = availability.get();
-
-        checkIfShouldUpdateQuantity(toUpdate.getUpdatedAt(), updatedAt, quantity, protection);
-
-        clothes.getAvailability().remove(toUpdate);
-
-        toUpdate.setQuantity(quantity);
-        toUpdate.setUpdatedAt(updatedAt);
-        toUpdate.setProtection(protection);
-
-        clothes.getAvailability().add(toUpdate);
-    }
-
-    private void updateElectronicQuantity(String sku, Integer quantity, LocalDateTime updatedAt, Integer protection, Electronic electronic) throws BusinessException {
-        Optional<ProductAvailabilityElectronic> availability = electronic.getAvailability()
-                .stream()
-                .filter(productAvailabilityElectronic -> productAvailabilityElectronic.getSku().equals(sku))
-                .findAny();
-
-        if (availability.isEmpty()) {
-            throw new BusinessException("NOT_FOUND");
-        }
-
-        ProductAvailabilityElectronic toUpdate = availability.get();
-
-        checkIfShouldUpdateQuantity(toUpdate.getUpdatedAt(), updatedAt, quantity, protection);
-
-        electronic.getAvailability().remove(toUpdate);
-
-        toUpdate.setQuantity(quantity);
-        toUpdate.setUpdatedAt(updatedAt);
-        toUpdate.setProtection(protection);
-
-        electronic.getAvailability().add(toUpdate);
     }
 
     public void checkIfUpdateValue(Product product, BigDecimal value) throws BusinessException {

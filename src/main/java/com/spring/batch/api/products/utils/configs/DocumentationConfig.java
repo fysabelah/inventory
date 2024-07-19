@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DocumentationConfig {
 
-    @Value("${swagger.gateway.address}")
-    private String gateway;
+    @Value("${swagger.server.address}")
+    private String serverUrl;
 
     @Bean
     public OpenAPI apiDocConfig() {
@@ -25,7 +25,7 @@ public class DocumentationConfig {
                                 .title("Gerenciamento de Estoque")
                                 .description("API para gerenciamento e atualização em batch de produtos")
                                 .version("1.0.0")
-                ).addServersItem(new Server().url(gateway))
+                ).addServersItem(new Server().url(serverUrl))
                 .addSecurityItem(new SecurityRequirement()
                         .addList("bearerAuth")).components(new Components()
                         .addSecuritySchemes(

@@ -24,11 +24,11 @@ public class ProductDto {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
-    @Schema(description = "Informações sobre o produto", example = "Calça jeans azul de cintura baixo com rasgo no joelho")
+    @Schema(description = "Informações sobre o produto", example = "Um livro muito interessante")
     @Size(max = 150, message = "MAXIMUM_SIZE_EXCEEDED")
     private String description;
 
-    @Schema(description = "Define o tipo de payload a ser utilizado. Cada categoria possui seus campos a serem validados")
+    @Schema(description = "Define o tipo de payload a ser utilizado. Cada categoria possui seus campos a serem validados", example = "BOOKS")
     private ProductCategory category;
 
     @Schema(example = "115.99", description = "Valor unitário do produto")

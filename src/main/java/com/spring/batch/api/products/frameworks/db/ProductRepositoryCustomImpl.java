@@ -165,10 +165,13 @@ class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     public void updateReservedQuantityPerSku(ProductCategory category, Integer reservedQuantity, String sku) {
         String baseField;
 
+        String updateQuery = ".availability.$.reservedQuantity";
+
         if (ProductCategory.CLOTHES.equals(category)) {
             baseField = "clothes";
         } else if (ProductCategory.BOOKS.equals(category)) {
             baseField = "book";
+            updateQuery = ".availability.reservedQuantity";
         } else if (ProductCategory.ELECTRONICS.equals(category)) {
             baseField = "electronic";
         } else {
@@ -176,7 +179,7 @@ class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         }
 
         Query query = new Query(Criteria.where(baseField + ".availability.sku").is(sku));
-        Update update = new Update().set(baseField + "availability.$.reservedQuantity", reservedQuantity);
+        Update update = new Update().set(baseField + updateQuery, reservedQuantity);
         template.updateFirst(query, update, Product.class);
     }
 }

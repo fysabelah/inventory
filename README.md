@@ -67,8 +67,8 @@ alterado como bem entender.
 
 A documentação pode ser acessada em:
 
-* Formato json: http://localhost:7071/documentation
-* Swagger-Ui: http://localhost:7071/doc/products.html
+* Formato json: http://localhost:7072/documentation
+* Swagger-Ui: http://localhost:7072/doc/products.html
 
 Obs.: Esta informação considera apenas uso deste serviço. Para acesso a documentação considerando a execução de todos
 serviços, favor consultar o README.md do [_ecommerce_](https://github.com/DFaccio/ecommerce-system).  
